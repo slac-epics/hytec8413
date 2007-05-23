@@ -1,0 +1,50 @@
+#==============================================================
+#
+#  Abs:  EPICS Database definitions for Hytec IP-ADC-8413
+#
+#  Name: devHy8413.dbd
+#
+#  Rem: The module is a Industry Pack that provies
+#       16-channel of simultaneous sampled analogue
+#        digitization with the follwoing characteristics:
+#         
+#             16 independent channels
+#             16-bit resolution - 15 bits no missing codes
+#             single full-scale trim for hw gain adjustment
+#             Sw calibration possible using stored offset and gain
+#             Differential inputs
+#             +/- 10V full-scale standard
+#             Front-end instrumentation amplifiers can be 
+#              factory set for gains up to x1000.
+#             FIFO memories for single sample and optional 
+#              triggered sample readout
+#             Low offfset error +- 2.5mV w/o sw calibration
+#             Low gain error +/-0.5% FS w/o sw calibration
+#             Low error drift of 2ppm per deg C
+#             Data format: two's complement
+#             High input impedeance of 5Gohms
+#             Up to 200KHz sampling rate
+#             Simultaneous ssampling of 20ns amperture time
+#             System to plant isolation to 100V when externally powered
+#               by DC/DC converter option
+#             Serial no, PCB issue and firmware issue held in ID PROM
+#             8/32MHz system clock operation
+#
+#  Side: None
+#
+#  Facility: SLAC/LCLS
+#
+#  Auth: 21-Aug-2006, K. Luchini     (LUCHINI)
+#  Rev:  dd-mmm-yyyy, First Lastname (USERNAME)
+#
+#--------------------------------------------------------------
+#  Mod:
+#       dd-mmm-yyyy, First Lastname (USERNAME):
+#         comments
+#
+#==============================================================
+#
+device(ai,INST_IO,devAiHy8413,"Hytec IP-ADC-8413")
+driver(drvHy8413)
+
+

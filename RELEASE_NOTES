@@ -1,0 +1,15 @@
+#==============================================================
+#
+#  Name: RELEASE_NOTES
+#
+#  Rem: This files describes release notes for
+#       the Hytec IP 8413 ADC Device and
+#       Driver support.      
+#
+#  Auth: 22-May-2007, K. Luchini         (LUCHINI)
+#  Rev:  dd-mmm-yyyy, Reviewer's Name    (USERNAME)
+#--------------------------------------------------------------
+#
+hytec8413-R0-0:  Initial entry created to support LCLS and 
+                 currently running the the injector and BC1
+                 phase of the project.
