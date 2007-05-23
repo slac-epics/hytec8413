@@ -19,7 +19,7 @@
 #
 #=============================================================
 #
-TOP=../..
+TOP=..
 include $(TOP)/configure/CONFIG
 #----------------------------------------
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
