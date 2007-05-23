@@ -10,6 +10,8 @@
 #  Rev:  dd-mmm-yyyy, Reviewer's Name    (USERNAME)
 #--------------------------------------------------------------
 #
+hytec8413-R1-1:  Add calibration and more device support.
+
 hytec8413-R1-0:  Modify configure/RELEASE to use new build area
 
 hytec8413-R0-0:  Initial entry created to support LCLS and 
