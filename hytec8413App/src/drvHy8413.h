@@ -36,6 +36,149 @@ extern "C" {
 #define FULL(csr)     (0)                      
 #define DATA_RDY(csr) (csr&0x0040 ? 1 : NULL )
 #define ICNT(err)     ( err==0xffff ? err=1 : err++ )
+#define MIN(a,b)      ( a<b ? a : b )
+
+/********************************************
+
+              Task information
+
+*********************************************/
+
+/* IO scan task */
+#define HY8413_SCAN_NAME      "Hy8413Scan"
+#define HY8413_SCAN_PRI       70
+#define HY8413_SCAN_OPT       FP_TASK
+#define HY8413_SCAN_STACK     (4096 * ARCH_STACK_FACTOR)
+
+/* Fifo full task.  */
+#define HY8413_DONE_NAME      "Hy8413Done"
+#define HY8413_DONE_PRI       69
+#define HY8413_DONE_OPT       FP_TASK
+#define HY8413_DONE_STACK     (4096 * ARCH_STACK_FACTOR)
+
+/************************************************************
+
+                      IO Registers                 
+                     
+*************************************************************/
+
+/* Word offset from base io address */
+#define HY8413_CSR          0x0   /* control status register               */
+#define HY8413_SAMP_LS      0x2   /* trigger sample num reg (lower word)   */
+#define HY8413_SAMP_MS      0x4   /* trigger sample num reg (uper word)    */
+#define HY8413_CLK          0x6   /* internal clock rate register          */
+#define HY8413_VEC          0x8   /* interrupt vector register             */
+#define HY8413_INT_FIFO     0xa   /* adc internal fifo,  16 conversions    */
+                                  /* one conversion per channel            */
+
+/* Clock Rate register */
+#define HY8413_CLK_RATE_MASK 0xf    
+#define HY8413_MIN_CLK_RATE  0
+#define HY8413_MAX_CLK_RATE  15
+
+/*
+ * The external FIFO, when triggered will store 16384 16-bit words samples for each channel.
+ * Once the FIFO is triggered it will continue to store all 16384 samples for each 
+ * channel until the FIFO is full. 
+ *
+ * The FIFO may be readout as it is filling. The data is stored in groups of 16 samples,
+ * such that each sample includes all 16-samples as follows:
+ *
+ *  sample     #1:  1 of 16, 2 of 16, ...16 of 16
+ *  sample     #2:  1 of 16, 2 of 16, ...16 of 16
+ *   ....
+ *  sample #16384: 1 of 16, 2 of 16, ... 16 of 16
+ * 
+ * Therefore, even though the data can be read out of the FIFO at any time, 
+ * groups of 16 word should be read at a time to keep the sample format intact.  
+ */
+#define HY8413_EXT_FIFO     0xc   /* adc external fifo, 256K conversion    */
+                                  /* 16384 conversion per channel          */
+/*
+ * The external fifo fullness counter register is a 16 bit. This register count 
+ * conversions as they are read from the external FIFO. At the end of each trigger and 
+ * readout sequence to empty the FIFO, the value in the registers should be zero. 
+ * When the FIFO is full (TF) the counter will display 16384(dec) (ie 0x4000) for 256K.
+ */
+#define HY8413_EXT_FIFO_FULL 0xe  /* external fifo full counter            */
+
+/*
+ * There are sixteen ADC buffer registers (addresses 10hex - 2Ehex) which store 
+ * the last sampled conversions and may be read at any time.  The channel order
+ * is channel 1 at address 10hex to channel 16 at address 2E.  Additionally there
+ * are two additional ADC registers to monitor the 0V Reference  (address 30Hex) 
+ * and 2.5V Reference  (address 32Hex). All ADC registers are updated simultaneously
+ *
+ * The ADC data can be configured to straight binary or 2's complement format 
+ * dependent upon 2C  bit 3 of the Auxiliary Control Register. Set this bit to 1 
+ * for straight binary and 0 for 2's complement operation.
+ *
+ * The ADC range can also be set to +/-10V or +/-5V dependent upon bit 0 of the 
+ * Auxiliary Control Register RGE. Set this bit to 1 for +/-5V and set to
+ * 0 for +/-10V operation. At switch on the default will be 2's complement
+ * and +/-10V operation
+ *
+ * The first sixteen ADC buffer registers store the last sample conversions 
+ * and may be read at any time.  The seventeenth is used to monitor the 0V 
+ * reference and the eighteenth is used to monitor the 2.5V reference.
+ */
+#define HY8413_ADC          0x10   /* chan 1-16 last conversions */
+#define HY8413_ZERO_REF     0x1e   /* 0V reference               */
+#define HY8413_2HALF_REF    0x20   /* 2.5V reference             */
+
+/*
+ * Auxillary control register. This register is reset to all
+ * zeros at switch on and must be set for correct operation
+ */
+#define HY8413_AUX          0x34
+
+
+/************************************************************
+
+                      Calibration Type 
+                  defined in id prom at BASE+0x98 
+                     
+*************************************************************/
+/* 
+ * The type of calibration factores held in the ID PROM are specified at 
+ * base+0x98 in the ID PROM, such that:
+ *
+ *   0 = no calibration factors held in ID PROM
+ *   2 = calibration factors stored in ID PROM
+ *
+ * The calibration factors are held in the ID PROM starting at baxe +0xa0.
+ * These values are derived from reading the ADC values at specified voltages.
+ * 
+ * For the nFS vaule, -10Volts, pHS at +5Volts and PFS at +10Volts. These values 
+ * can then be used in the user program equations to correct the offset and
+ * gain errors of the individual channels of the ADC.
+ */
+#define HY8413_NO_CAL_PTS   0   /* no calibration       */
+#define HY8413_3PT_CAL_PTS  1   /* calibration 3 pts    */
+#define HY8413_5PT_CAL_PTS  2   /* calibration 5 pts    */
+#define ID_PG_WCNT          30  /* base+0x80 to base+ba */
+
+/* Word index for each channels calibration data  */
+#define HY8413_CAL_NEG_FS      0   /* negative full scale */
+#define HY8413_CAL NEG_HS      1   /* negative half scale */
+#define HY8413_CAL_ZERO        2   /* zero                */
+#define HY8413_CAL_POS_HS      3   /* positive half scale */
+#define HY8413_CAL_POS_FS      4   /* positive full scale */
+
+#define POS_FULL_SCALE         4    /* 10V index to calibration voltage */
+#define POS_HALF_SCALE         3    /* 5V  index to calibration voltage */
+#define ZERO                   2    /* 0V   */
+#define NEG_HALF_SCALE         1    /* -5V  */
+#define NEG_FULL_SCALE         0    /* -10V */
+
+typedef enum {
+  nocal      = 0,
+  factor_3pt = 1,
+  factor_5pt = 2
+} hy8413_calType_te; 
+  
+/* pg1 chan 0-5, pg2 chan 6-11, pg3 chan 12-16 */
+#define HY8413_MAX_CHANS_PER_PAGE 6
 
 /************************************************************
 
@@ -56,9 +199,15 @@ extern "C" {
 #define HY8413_CSR_RST      0x0010   /* reset the FIFO when set to 1   (R/W) */
 
 /*
- * When set to 1 the internal clock generates a 10MHz clock. 
+ * DMA Request. When set to 1 allow DMA request between the IP carrier
+ * card. DMAREQ0 set when external FIFO is full and DMAREQ1 set when internal
+ * FIFO full.
+ * Note: At present the External FIFO operation is not available as of Dec 2006.
+ *
+ * OLD: When set to 1 the internal clock generates a 10MHz clock.
+ *      HY8413_CSR_IC       0x0020      Internal clock (R/W) 
  */
-#define HY8413_CSR_IC       0x0020   /* Internal clock (R/W)  */
+#define HY8413_CSR_DRE      0x0020   /* Internal clock (R/W)  */
 
 /* 
  * The post-trigger FIFO is a quatter full. 
@@ -117,9 +266,6 @@ extern "C" {
  */
 #define HY8413_CSR_ARM      0x8000  
 
-#define HY8413_MIN_CLK_RATE 0
-#define HY8413_MAX_CLK_RATE 15
-
 /************************************************************
 
              Auxilary Control Register bit masks (ACR)
@@ -135,53 +281,88 @@ extern "C" {
  * the bits PG0 and PG1 in the auxilary control register are used 
  * to switch between pages of the ID PROM.
  * 
- *  PG1  PG0  Page  Notes
+ *  PG1  PG0  Page# Notes
  *   0   0    0     Normal VITA4 format for ID PROM (default)
  *   0   1    1     Calibration values for ADC Channel 0-5
  *   1   0    2     Calibration values for ADC Channel 6-11
  *   1   1    3     Calibration values for ADC Channel 12-16
  */
-#define HY8413_ACR_MASK  0x003F  /* Register Mask */
-#define ID_PROM_MIN_PAGE  0
-#define ID_PROM_MAX_PAGE  3
+#define HY8413_ACR_MASK          0x003F  /* Register Mask */
 
 /* 
  * Sets the range of the ADCs such that
  * 0 =  +/-10V
  * 1 =  +-5
  */
-#define HY8413_ASCR_RGE  0x0001
+#define HY8413_ACR_RGE      0x0001
+#define HY8413_ACR_RGE_SHFT 0
+typedef enum
+{
+    ten_plus_minus =0, /* +10V to -10V */
+    five_plus_minus=1  /*  +5V to  -5V */
+}hy8413_rng_te;
 
-/* 
- * Operation state
- * 0 = Normal operation
- * 1 = Reset ADC
- */
-#define HY8413_ACR_RST   0x0002
 
 /*
- * Operation Mode
- * 0 = Standby Mode
- * 1 = Normal Operation
+ *  There are two types of operating modes:
+ *  1. DC sampling mode - when the unit is armed or receiving an external 10MHz
+ *     signal, the inputs are sampled at the programmed clock rate and conversions
+ *     placed in a 16 conversion pre-trigger FIFO.
+ *  2. Standby mode.
  */
-#define HY8413_ACR_NS    0x0004
+#define HY8413_ACR_NS        0x0004
+#define HY8413_ACR_NS_SHFT   2 
+typedef enum 
+{
+  standby=0,
+  normal=1,
+} hy8413_mode_te;
+
 
 /* 
  * ADC data format
  * 0 = two's complement (default).
  * 1 = ADC values 0 (Neg FS)-FFFF(Pos FS) 
  */   
-#define HY8413_ACR_2C    0x0008 
-		    
-/* 
+#define HY8413_ACR_2C       0x0008 
+#define HY8413_ACR_2C_SHFT  3
+typedef enum 
+{
+   twos_compliment=0,
+   offset_binary=1
+}hy8413_2c_te;
+#define OFFSET_BINARY  1
+#define TWOS_COMPIMENT 0
+
+#define OFFSET_BINARY_MIN       0x0
+#define OFFSET_BINARY_ZERO      0x8000
+#define OFFSET_BINARY_MAX       0xffff
+
+#define TWOS_COMPLIMENT_MIN     0x8000
+#define TWOS_COMPLIMENT_ZERO    0x0
+#define TWOS_COMPLIMENT_MAX     0x7fff		    
+/*  
+ * Paging:
  * Bit 0 of ID PROM Paging
  */ 
-#define HY8413_ACR_PG0   0x0010
+#define HY8413_ACR_PG        0x0070
+#define HY8413_ACR_PG_SHFT    4
+#define HY8413_MIN_PG         0  /* minimum id prom page number           */
+#define HY8413_MAX_PG         6  /* maximum id prom page number           */
+#define HY8413_NUM_PG         3  /* number of calibration pages per range */
+#define HY8413_MIN_PG_CHAN    4  /* minimum number of channels per page   */
+#define HY8413_MAX_PG_CHAN    6  /* maximum number of channels per page   */
+typedef enum 
+{
+    pg0=0,
+    pg1=1,
+    pg2=2,
+    pg3=3,
+    pg4=4,
+    pg5=5,
+    pg6=6
+}hy8413_pg_te;
 
-/*
- * Bit 1 of ID PROM Paging
- */ 
-#define HY8413_ACR_PG1   0x0020
 
 /************************************************************
 
@@ -199,13 +380,6 @@ extern "C" {
  * channel order is channel1 at address base+10x to channel 16 at base+0x2e).
  * The data format is two's compliment such that 0x1000=-10V adn 0x7fff=+10V.
  */
-typedef struct hy8413_data_s 
-{
-   short adc_a[HY8413_NUM_CHAN];
-   short ref_0_volt;
-   short ref_2_5_volt;
-}hy8413_data_ts;
-
 /*
  * All device registers must be declared as
  * ANSI C volatile so we dont need to use 
@@ -240,22 +414,26 @@ typedef volatile struct hy8413_io_s
    * address: base +0x8
    */
    unsigned short       vec;    
+
    struct {
     /*
-     * Read the pre-trigger FIFO memory (16 conversions).
+     * Read the internal FIFO memory (16 conversions).
      * Reset Full and set FE when the FIFO is emptied.
      * address: base +0xa
      */
-    unsigned short pre_trig;
-    /* 
-     * Read the post-trigger FIFO memory (256K conversions).
+    unsigned short internal;
+    /*
+     * Read the External FIFO memory (256K conversions).
      * Reset TF and TFE when FIFO is emptied.
+     * When the external fifo is triggered it will store 16384 16-bit samples
+     * of each channel. Once the FIFO is triggered it will continue to sture
+     * all 16384 samples of each channel until it is full.
      * address: base +0xc
      */
-    unsigned short post_trig;  
+    unsigned short external;  
     
      /*
-      * Thisis the FIFO fullness counter. Two up/down counters which
+      * This is the FIFO counter. Two up/down counters which
       * count conversions as they are entered/read form the pre-trigger 
       * FIFO (least significant byte) and post-trigger FIFO (most significant byte).
       * At the end of each trigger/readout sequence the value in the registers
@@ -269,10 +447,18 @@ typedef volatile struct hy8413_io_s
   }fifo_s;
 
    /* 
+    * The adc register readout has 16 buffer registers (from base+0x10 to base+0x2e),
+    * which store the last sampled conversions and may be read at any time. The 
+    * channel order is channel 0 at address base+10x to channel 16 at base+0x2e).
+    * The data format is dependent on the setting of the acr register
+    * Note: two's compliment such that 0x1000=-10V, 0x0=0V, 0x7fff=+10V.
+    * 
     * ADC channel data and reference voltage (R)
-    * address: base +0x10 to base+0x32 
+    * address: base +0x10 to base+0x2e 
     */
-   hy8413_data_ts data_s; 
+    unsigned short  adc_a[HY8413_NUM_CHAN];
+    unsigned short  ref_zero_volt;
+    unsigned short  ref_2_5_volt;
 
    /*
     * Auxilary Control Register (ACR).
@@ -283,59 +469,48 @@ typedef volatile struct hy8413_io_s
    
 } hy8413_io_ts;
 
-typedef union 
-{
-  short           _a[HY8413_NUM_CHAN+2];
-  hy8413_data_ts  _s;
-}hy8413_io_tu;
-
 typedef struct hy8413_io_s  * HY8413_IO;
 
 /************************************************************
 
-                    Module Configuration Information
-                    (see: EPICS driver support)
+                   ID PROM Register Map
 
 *************************************************************/
-/*
- *  There are trhe types of operating modes:
- *  1. DC sampling mode - when the unit is armed or receiving an external 10MHz
- *     signal, the inputs are sampled at the programmed clock rate and conversions
- *     placed in a 16 conversion pre-trigger FIFO.
- *  2. Register mode - the last ADC reading may be read at random from each addressed
- *     ADC register.
- *  3. Triggered sampling - when the board is triggered conversion are stored in a 
- *     large 156K conversion post-trigger FIFO. Interrupt requests is generated when 
- *     the FIFO is full. The FIFO may be readout as it is filling. The pre-trigger
- *     FIFO remains unchanged. A record of the sample number when the trigger occured
- *     is stored and can be read.
- */
-typedef enum 
-{
-  dcMode=0,
-  regMode=1,
-  TrigMode=2
-} hy8413_mode_te;
 
-/* 
- * The type of calibration factores held in the ID PROM are specified at 
- * base+0x98 in the ID PROM, such that:
- *
- *   0 = no calibration factors held in ID PROM
- *   2 = calibration factors stored in ID PROM
- *
- * The calibration factors are held in the ID PROM starting at baxe +0xa0.
- * These values are derived from reading the ADC values at specified voltages.
- * 
- * For the nFS vaule, -10Volts, pHS at +5Volts and PFS at +10Volts. These values 
- * can then be used in the user program equations to correct the offset and
- * gain errors of the individual channels of the ADC.
- */
-typedef enum 
+typedef volatile struct hy8413_idProm_s
 {
-  noCalb=0,
-  Calb=2
-} hy8413_calb_te;
+  /* standards registerd */
+    unsigned short asciiI;           /* BASE+0x80 "VI"     */
+    unsigned short asciiP;           /* BASE+0x82 "TA"     */
+    unsigned short asciiA;           /* BASE+0x84 "4 "     */
+    unsigned short asciiC;           /* BASE+0x86 unused   */
+    unsigned short manufacturerId;   /* BASE+0x88 unused   */
+    unsigned short modelId;          /* BASE+0x8A          */
+    unsigned short revision;         /* BASE+0x8C          */
+    unsigned short reserved;         /* unused */
+    unsigned short driverIdLow;      /* unused */
+    unsigned short driverIdHigh;     /* unused */
+    unsigned short bytesUsed;        /* unused */
+    unsigned short CRC;              /* unused */
+
+    /* Pack specified */
+    unsigned short    calType;      /* BASE+0x98 */
+    unsigned short    serialNo;     /* BASE+0x9A */
+    unsigned short    spare;        /* BASE+0x9C */
+    unsigned short    WLO;          /* BASE+0x9E */
+    unsigned short    packSpecific_a[48];
+}hy8413_idProm_ts;
+
+typedef struct hy8413_idProm_s * HY8413_ID;
+
+typedef struct hy8413_calData_s
+{
+   unsigned short negFS;
+   unsigned short negHS;
+   unsigned short zero;
+   unsigned short posHS;
+   unsigned short posFS;
+}hy8413_calData_ts;
 
 #ifdef __cplusplus
 }

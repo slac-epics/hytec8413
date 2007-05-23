@@ -40,10 +40,10 @@ long hytec_ipmAdd(
  * Otherwise, a NULL will be returned.
  */
 void * hytec_ipmInitDev( 
-	  char const * const  rec_name_c,    /* record name                      */  
-	  unsigned short      func,          /* type of function to perform      */
-          unsigned short      nelm,          /* Number of elements               */
-          char const * const  string_c       /* INP or OUT field of record       */
+	  char const * const           rec_name_c,    /* record name                      */  
+          unsigned short               rec_type,       /* type of info, chan or register  */
+          unsigned short               nelm,          /* Number of elements               */
+          char const * const           string_c       /* INP or OUT field of record       */
                          );
 
 /*
@@ -53,7 +53,7 @@ void * hytec_ipmInitDev(
 void * hytec_ipmGetFirst(void);
 
 /*
- * This purpose of this function is to display
+ * The purpose of this function is to display
  * information regarding the card list list. The
  * detail displayed is dependend on the level
  * supplied. Level 0, produces a display with
@@ -61,5 +61,19 @@ void * hytec_ipmGetFirst(void);
  * producing more.
  */
 void hytec_ipmReport( int level );
+
+/*
+ * The purpose of this function is to 
+ * enable or disable the calibration
+ * usage flag for the specified module
+ * and channel. Note that this flag can
+ * only be enabled if calibration data is
+ * available for this module.
+ */
+long hytec_ipmCalEnb( 
+	  char const * const name_c, /* card name */
+          short              chan,   /* chan num 0-15, -1 for all channels */
+          unsigned short     enb     /* enable flag. 0=disable,1=enable    */
+                  );
 
 #endif /* HYTECIPMLIB_H */

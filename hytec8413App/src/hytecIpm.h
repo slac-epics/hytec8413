@@ -14,7 +14,7 @@
   Auth: 19-Sep-2006, Kristi Luchini   (LUCHINI)
   Rev : dd-mmm-yyyy, Reviewer's Name  (USERNAME)
 
--------------------------------------------------------------
+------------------------------------------------------------
   Mod:
         dd-mmm-yyyy, First Lastname (USERNAME):
            comments
@@ -41,7 +41,20 @@ extern "C" {
 #ifndef ERROR
 #define ERROR -1
 #endif
+
 #define ANLG_NO_CONVERSION       2          /* device support not convsion */
+
+#define TYPE_BI                  0         /* bi record type               */
+#define TYPE_MBBI                1         /* mbbi record type             */
+#define TYPE_MBBI_DIRECT         2         /* mbbiDirect record type       */
+#define TYPE_AI                  3         /* analog input record          */
+#define TYPE_WF                  4         /* waveform input record        */
+#define TYPE_BO                  5         /* bo record type               */
+#define TYPE_MBBO                6         /* mbbo record type             */
+#define TYPE_MBBO_DIRECT         7         /* mbboDirect record type       */
+#define TYPE_LI                  8         /* Longin record type           */
+
+#define MAX_BITS                 16        /* max num of bits in acr,csr   */
 
 /* Interrupt limits */
 #define DEFAULT_INT_LEVEL        3          /* default interrupt level     */
@@ -51,7 +64,12 @@ extern "C" {
 #define MAX_VEC_NUM             255         /* maximum interrupt vector    */
 
 #define MAX_CA_STRING_SIZE      40
-#define MAX_CHAN                16          /* maximum number of channels */
+#define MAX_CHAN                16          /* maximum number of channels      */
+#define MAX_ID_PAGES            3           /* maximum number of ID PROM pages */
+#define MIN_CAL_PTS             3           /* minimum num of cal pts per chan */
+#define MAX_CAL_PTS             5           /* maximum num of cal pts per chan */
+#define NUM_CAL_TYPES           3           /* number of calibration  types    */
+#define CAL_MASK               0x3          /* mask for calibration type       */   
 
 /************************************************************
 
@@ -89,19 +107,7 @@ extern "C" {
 #define  HYTEC_PROM_MANUF    0x80
 #define  HYTEC_IP8413_MODEL  0x8413
 #define  HYTEC_IP8402_MODEL  0x8402
-
-/*
- * For some reason Hytec is not using Ipac standard
- * for the ID PROM layout, so the structure below is
- * what should be used.
- * WARNING:!!!  
- * when using the ipac driver calls such as ipmValidate() 
- * you will get an invalid return because of Hytec's
- * non-standard usage of this space. So special software
- * routines must deal with this mess.
- */
-#define IPAC_IO_SPACE_WCNT  64
-#define IPAC_ID_SPACE_WCNT  64
+#define  IPAC_ID_SPACE_WCNT  64
 
 typedef volatile struct hytec_ipac_idProm_s
 {
@@ -120,16 +126,30 @@ typedef volatile struct hytec_ipac_idProm_s
     unsigned short CRC;              /* unused */
 
     /* Pack specified */
-    unsigned short    calibration;    /* BASE+0x98 */
-    unsigned short    serialNo;       /* BASE+0x9A */
-    unsigned short    spare[50];
+    unsigned short    calType;      /* BASE+0x98 */
+    unsigned short    serialNo;     /* BASE+0x9A */
+    unsigned short    spare;        /* BASE+0x9C */
+    unsigned short    WLO;          /* BASE+0x9E */
+    unsigned short    packSpecific_a[48];
 }hytec_ipac_idProm_ts;
 
-typedef union {
-  short                 _a[IPAC_ID_SPACE_WCNT];
+/*
+ * For some reason Hytec is not using Ipac standard
+ * for the ID PROM layout, so the structure below is
+ * what should be used.
+ * WARNING:!!!  
+ * when using the ipac driver calls such as ipmValidate() 
+ * you will get an invalid return because of Hytec's
+ * non-standard usage of this space. So special software
+ * routines must deal with this mess.
+ */
+typedef union hytec_ipac_idProm_u { 
+  unsigned short        _a[IPAC_ID_SPACE_WCNT];
   ipac_idProm_t         std_s;
   hytec_ipac_idProm_ts  hytec_s;
 } hytec_ipac_idProm_tu;
+
+typedef union hytec_ipac_idProm_u  * HYTEC_ID;
 
 /************************************************************
                    Status Codes
@@ -177,10 +197,41 @@ typedef struct  drvHytec_err_s
 
 /************************************************************
 
+                   Module Calibration Information
+
+*************************************************************/
+#define NUM_FORMATS  2
+typedef struct hytec_ipmCalChan_s
+{
+   unsigned short    init;      /* successfully read cal data      */
+   unsigned short    enb;       /* use calibration flag           */
+  /*
+   * The data calibration data is stored in the id prom
+   * memory as offset binary format. However, since the
+   * data can be read in either offset binary or two's 
+   * compliment (see auxilliary control register), the
+   * calibration data is stored locally in both data
+   * formats.
+   */
+   unsigned short    gain_a[NUM_FORMATS][MAX_CAL_PTS];
+} hytec_ipmCalChan_ts;
+
+typedef struct  hytec_ipmCal_s
+{
+    unsigned short       type;          /* calibration type                */
+    unsigned short       enb;           /* calibrate enable                */
+    short                npts;          /* number of calibration poits     */
+    hytec_ipmCalChan_ts  chan_as[MAX_CHAN];
+}hytec_ipmCal_ts;
+
+/************************************************************
+
                    Module Configuration
                 (see: EPICS driver support)
 
 *************************************************************/
+
+typedef void (*VOIDFUNPTR)(void);
 
 typedef struct hytec_ipmConfig_s
 {
@@ -188,27 +239,47 @@ typedef struct hytec_ipmConfig_s
   unsigned short          carrier;       /* Industry Pack Carrier Index     */
   unsigned short          slot;          /* Slot number on carrier          */
   unsigned short          model;         /* Hytec ID PROM model number      */
+  unsigned short          serialNo;      /* Serial Number                   */
+  unsigned short          rev;           /* revision                        */
   char                   *name_c;        /* Card name, NULL terminated      */
 
+  unsigned short          range;         /* voltage range of module         */
+  unsigned short          mode;          /* operating mode                  */
+  unsigned short          format;        /* adc data format                 */
+
+  hytec_ipmErr_ts         err_cnt_s;
   unsigned short          nchan;         /* Number of channels              */
   unsigned long           init;          /* initialize flag                 */
-  IOSCANPVT               ioscanpvt;     /* array of io ioscan lists        */
-
+  unsigned char           intHandler;    /* interrupt handler flag          */
+  int                     arm;
   epicsMutexId            lock;
   unsigned char           intVec;        /* interrupt vector                */
   int                     intLevel;      /* interrupt level                 */
 
   volatile void          *io_p;          /* io register map (A16)           */
-  ipac_idProm_t          *id_ps;         /* id prom         (A16)           */ 
+  hytec_ipac_idProm_tu   *id_pu;         /* id prom         (A16)           */ 
   volatile void          *mem_p;         /* memory address  (A24)           */
 
-  unsigned short         fifo_state;     /* fifo state                      */
-  hytec_ipmErr_ts        err_cnt_s;
+  hytec_ipmCal_ts         cal_s;          /* calibration information             */
 
-  unsigned short         opMode;         /* operating mode                  */
+  IOSCANPVT              biScan_a[2][MAX_BITS];
+  IOSCANPVT              mbbiScan_a[MAX_BITS];
+  IOSCANPVT              calEnbScan;
+  struct 
+  {
+    unsigned short state;
+    IOSCANPVT      ioscanpvt;
 
-  unsigned short         calMode;        /* 0=No calibration, 2=calibration */
-  unsigned short         gain_a[MAX_CHAN];
+  } fifo_s;
+
+  /* Module specific functions */
+  struct 
+  {
+    VOIDFUNPTR           isr_pf;         /* Address of Interrupt Service Routine */
+    VOIDFUNPTR           usr_pf;         /* Address of user function             */
+    VOIDFUNPTR           rdWf_pf;        /* Address of read wavefor routine      */
+    VOIDFUNPTR           rdCal_pf;       /* Address of read calibration routine  */
+  }rtn_s;
 
 }hytec_ipmConfig_ts;
 
@@ -222,20 +293,39 @@ typedef struct hytec_ipmConfig_s * IPADC_ID;
 *************************************************************/
 typedef enum 
 {
-  ReadAdc  = 0,
-  ReadFifo =1
+  ReadCSR       = 0,
+  ReadACR       = 1,
+  ReadIO        = 2,
+  ReadID        = 3,
+  ReadCAL       = 4,
+  ReadDATA      = 5,
+  SetCSR        = 6,
+  SetACR        = 7,
+  SetIO         = 8,
+  SetID         = 9,
+  SetCAL        = 10
 } hytec_func_te;
+
+#define REG_IO_CSR  "CSR"
+#define REG_IO_ACR  "ACR"
+#define REG_IO      "IO"
+#define REG_ID      "ID"
+#define REG_SW_CAL  "CAL"  /* This is software related items */
+#define REG_IO_DATA "DATA"
+#define REG_TYPE_NUM 6
+
 
 typedef struct hytec_devicePvt_s
 {
-  IPADC_ID             card_ps;
-  unsigned short       chan;
-  unsigned short       nelm;
-  hytec_func_te        func;
-  hytec_ipmStatus_te      status;
-}hytec_devicePvt_ts;
+  IPADC_ID             card_ps; /* IPAC card information        */
+  short                i;       /* channel num or word offset   */
+  unsigned short       nelm;    /* number of elements to read   */
+  unsigned short       recType; /* type of record               */
+  hytec_func_te        func;    /* type of operation            */
+  hytec_ipmStatus_te   status;  /* status of operation          */
+} hytec_devicePvt_ts;
 
-typedef struct hytec_devicePvt_s * DPVT_ID;
+typedef struct hytec_devicePvt_s          * DPVT_ID;
 
 #ifdef __cplusplus
 }

@@ -44,7 +44,14 @@
 #
 #==============================================================
 #
-device(ai,INST_IO,devAiHy8413,"Hytec IP-ADC-8413")
+device(ai,         INST_IO,devAiHy8413,         "Hytec IP-ADC-8413")
+device(bi,         INST_IO,devBiHy8413,         "Hytec IP-ADC-8413")
+device(bo,         INST_IO,devBoHy8413,         "Hytec IP-ADC-8413")
+device(longin,     INST_IO,devLiHy8413,         "Hytec IP-ADC-8413")
+device(mbbi,       INST_IO,devMbbiHy8413,       "Hytec IP-ADC-8413")
+device(mbbiDirect, INST_IO,devMbbiDirectHy8413, "Hytec IP-ADC-8413")
+device(mbbo,       INST_IO,devMbboHy8413,       "Hytec IP-ADC-8413")
+device(waveform,   INST_IO,devWfHy8413,         "Hytec IP-ADC-8413")
 driver(drvHy8413)
 
 

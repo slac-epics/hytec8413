@@ -4,13 +4,12 @@
   Abs:  EPICS Device Support for the Hytec IP-ADC-8413 Module
 
   Name: devAiHy8413.c
+         *   init_ai            - initialization
+         *   read_ai            - read analog input
+         *   get_ioint_info_ai  - Get I/O event list info
+         *   special_linconv_ai - linear conversion routine
 
-         *   ai_init_record     - initialization
-         *   ai_rd_record       - read analog input
-         *   ai_get_ioint_info  - Get I/O event list info
-         *   ai_special_linconv - linear conversion routine
-
-   Proto: 
+  Proto: None
 
   Auth: 19-Sep-2006, K. Luchini       (LUCHINI)
   Rev : dd-mmm-yyyy, Reviewer's Name  (USERNAME)
@@ -41,52 +40,42 @@
 #include "drvIpac.h"        /* ipac_idProm_t            */
 #include "hytecIpm.h"       /* for IPADC_ID,DPVT_ID     */
 #include "hytecIpmLib.h"    /* for hytec_ipmInitDev()   */
+#include "drvHy8413.h"      /* for factor_5pt, etc      */
 #include "drvHy8413Lib.h"   /* for drvHy8413_rd() proto */
 #include "epicsExport.h"
 
 
 /* Local prototypes */
-static long ai_init_record( void *rec_p );
-static long ai_rd_record( void *rec_p );
-static long ai_get_ioint_info( int cmd, void *rec_p,IOSCANPVT *evt_pp );
-static long ai_special_linconv(void *rec_p,int after);
+static long init_ai( void *rec_p );
+static long read_ai( void *rec_p );
+static long get_ioint_info_ai( int cmd, void *rec_p,IOSCANPVT *evt_pp );
+static long special_linconv_ai(void *rec_p,int after);
+
 
 
 /* Local variables */
 static double slope = 65535.0;      
 
-/* 
- * Global variables - device support entry table 
- * for conventional AI record  
- */
+/* Global variables */ 
+int debugDevHy8413=0;
+
+/*Device support entry table */
 struct {
      long       number;       /* number of functions in list        */
      DEVSUPFUN  report;       /* print report - currently not used  */
      DEVSUPFUN  init;         /* called once during ioc init        */
      DEVSUPFUN  init_record;  /* init support for particular record */
-  /*
-   * This routine is required for any device
-   * type that can use the ioEvent scanner.
-   * It is called by the ioEventScan system each
-   * time the record is added or deleted from
-   * an I/O event scan list.  The argument "cmd"
-   * of this function, has the value (0,1) if the
-   * record is being added to or deleted from,
-   * an I/O scan list.  It must be provided for
-   * any device type that can use the ioEvent scanner.
-   */
      DEVSUPFUN  get_ioint_info;
-
-     DEVSUPFUN  read_ai;            /* ptr to read function        */
+     DEVSUPFUN  read_write;            /* ptr to read function        */
      DEVSUPFUN  special_linconv;    /* special  lineary conversion */
 } devAiHy8413 = {
         6,
         NULL,
         NULL,
-        ai_init_record,
-        ai_get_ioint_info,
-        ai_rd_record,
-        ai_special_linconv };
+        init_ai,
+        get_ioint_info_ai,
+        read_ai,
+        special_linconv_ai };
 
 epicsExportAddress(dset,devAiHy8413);
 
@@ -95,11 +84,11 @@ epicsExportAddress(dset,devAiHy8413);
 
   Abs:  Device Support initialization
 
-  Name: ai_init_record
+  Name: init_ai
 
   Args: rec_p                          Record information
           Use:  struct
-          Type: biRecord *
+          Type: aiRecord *
           Acc:  read-write access
           Mech: By reference
 
@@ -116,30 +105,29 @@ epicsExportAddress(dset,devAiHy8413);
             hy8413_getConfig()
 
 =============================================================*/
-static long ai_init_record(void *rec_p)
+static long init_ai(void *rec_p)
 {
     long                          status = OK;
+    unsigned short                type = TYPE_AI;
+    unsigned short                nelm   = 1;
     struct instio                *instio_ps = NULL;
-    struct aiRecord              *ai_ps = NULL;
-    static const hytec_func_te    func = ReadAdc;
-    static const unsigned short   nelm = 1;
+    struct aiRecord              *rec_ps  = NULL;
 
    /*
     * Is this bus type supported for this module?
     */
-    ai_ps = (struct aiRecord *)rec_p;
-    switch (ai_ps->inp.type) {
+    rec_ps = (struct aiRecord *)rec_p;
+    switch (rec_ps->inp.type) {
 
         case INST_IO:  /* Instrumentation */
-          instio_ps = (struct instio *)&(ai_ps->inp.value);
-          ai_ps->dpvt = hytec_ipmInitDev( ai_ps->name,
-                                          (unsigned short)func,
-                                          nelm,
-                                          instio_ps->string );
-          if ( ai_ps->dpvt )
+          instio_ps = (struct instio *)&(rec_ps->inp.value);
+          rec_ps->dpvt = hytec_ipmInitDev( rec_ps->name,type,nelm,instio_ps->string );
+          if ( !rec_ps->dpvt )
+            status = S_dev_badInpType;
+          else
           {
-            ai_ps->eslo = (ai_ps->eguf - ai_ps->egul)/slope;
-            ai_ps->roff = ai_ps->eguf;
+            rec_ps->eslo = (rec_ps->eguf - rec_ps->egul)/slope;
+            rec_ps->roff = rec_ps->eguf;
           }
           break;
 
@@ -149,7 +137,7 @@ static long ai_init_record(void *rec_p)
     }/* End of switch statement */
 
     if ( status==OK )
-       ai_ps->udf = 0;      /* Init completed successfully */
+       rec_ps->udf = 0;      /* Init completed successfully */
     else
        recGblRecordError(status,rec_p,"devAiHy8413(init): Illegal INP field");
 
@@ -160,7 +148,7 @@ static long ai_init_record(void *rec_p)
 
   Abs:  Device Support for io scanner init
 
-  Name: ai_get_ioint_info
+  Name: get_ioint_info_ai
 
   Args: cmd                        Command being performed
           Use:  integer
@@ -191,18 +179,18 @@ static long ai_init_record(void *rec_p)
             OK - Successful operation (always returned)
 
 =============================================================*/
-static long ai_get_ioint_info( int cmd, void *rec_p, IOSCANPVT *evt_pp )
+static long get_ioint_info_ai( int cmd, void *rec_p, IOSCANPVT *evt_pp )
 {
     long               status=OK;          /* status return        */
     DPVT_ID            devPvt_ps = NULL;   /* private device info  */
-    struct aiRecord    *ai_ps;             /* Analog input record  */
+    struct aiRecord    *rec_ps;             /* Analog input record  */
 
 
-    ai_ps  = (struct aiRecord *)rec_p;
-    if (ai_ps->dpvt) 
+    rec_ps  = (struct aiRecord *)rec_p;
+    if (rec_ps->dpvt) 
     {
-       devPvt_ps = ai_ps->dpvt;
-       *evt_pp   = devPvt_ps->card_ps->ioscanpvt;
+       devPvt_ps = rec_ps->dpvt;
+       *evt_pp   = devPvt_ps->card_ps->fifo_s.ioscanpvt;
     }
     return( status );
 }
@@ -212,7 +200,7 @@ static long ai_get_ioint_info( int cmd, void *rec_p, IOSCANPVT *evt_pp )
 
   Abs:  Input device support read
 
-  Name: ai_rd_record
+  Name: read_ai
 
   Args: rec_p                      Record information
           Use:  struct
@@ -235,15 +223,19 @@ static long ai_get_ioint_info( int cmd, void *rec_p, IOSCANPVT *evt_pp )
              alarmStatusChk()
 
 =============================================================*/
-static long ai_rd_record(void *rec_p)
+static long read_ai(void *rec_p)
 {
-   long               status=OK;       /* status return            */
-   short              value;           /* analog data from channel */
-   unsigned short     cur_stat   = READ_ALARM;   /* alarm status   */
-   unsigned short     cur_sevr   = INVALID_ALARM;/* alarm severity */
-   DPVT_ID            devPvt_ps  = NULL;
-   struct aiRecord   *ai_ps      = (struct aiRecord *)rec_p;
-   char              *taskName_c = "devAiHy8413( read )";
+   long                 status=OK;          /* status return            */
+   unsigned short       rval=0;             /* raw data value           */
+   unsigned short       rescale=0;          /* use channel calibration  */
+   unsigned short       i=0;                  /* channel number           */
+   unsigned short       cur_stat   = READ_ALARM;      /* alarm status   */
+   unsigned short       cur_sevr   = INVALID_ALARM;   /* alarm severity */
+   DPVT_ID              devPvt_ps  = NULL;
+   IPADC_ID             card_ps    = NULL;
+   hytec_ipmCalChan_ts *cal_ps = NULL;
+   struct aiRecord     *rec_ps      = (struct aiRecord *)rec_p;
+   char                *taskName_c = "devAiHy8413( read )";
 
 
    /*
@@ -251,34 +243,43 @@ static long ai_rd_record(void *rec_p)
     * filled in then we have a problem and so
     * just exit successfully.  Otherwise, continue.
     */
-   if ( !ai_ps->dpvt ) 
+   if ( !rec_ps->dpvt ) 
    {
-       status = recGblSetSevr(ai_ps,cur_stat,cur_sevr);
+       status = recGblSetSevr(rec_ps,cur_stat,cur_sevr);
        if ( status  &&  errVerbose && 
-           ((ai_ps->stat!=cur_stat) || 
-            (ai_ps->sevr!=cur_sevr)) )
-         recGblRecordError(ERROR,(void *)ai_ps,taskName_c ); 
+           ((rec_ps->stat!=cur_stat) || 
+            (rec_ps->sevr!=cur_sevr)) )
+         recGblRecordError(ERROR,(void *)rec_ps,taskName_c ); 
       return(ERROR);
    }
 
   /*
    * Read data
    */
-   devPvt_ps = (DPVT_ID)ai_ps->dpvt;
-   status    = drvHy8413_rd((void *)devPvt_ps->card_ps->io_p,
-                            devPvt_ps->chan, 
-                            &value);
+   devPvt_ps = (DPVT_ID)rec_ps->dpvt;
+   card_ps   = devPvt_ps->card_ps;
+   status    = drvHy8413_rd(card_ps->io_p,devPvt_ps->i,(short *)&rval);
    if (status==OK)
    {
-      if ( !ai_ps->linr )
-      {
-        ai_ps->val  = value;
-        status = ANLG_NO_CONVERSION;
-      }
-      else 
-      {
-        ai_ps->rval = value;
-      }
+       i       = devPvt_ps->i;
+       cal_ps  = &card_ps->cal_s.chan_as[i];
+       rescale = cal_ps->enb;
+       if ( rescale && card_ps->cal_s.enb && cal_ps->init )
+       {
+          rval = drvHy8413_cal_adc( &cal_ps->gain_a[card_ps->format][0],
+                                    card_ps->cal_s.type,
+                                    card_ps->format,
+                                    rval );
+   
+       }
+
+       if ( !rec_ps->linr )
+       {
+         rec_ps->val  = rval;
+         status = ANLG_NO_CONVERSION;
+       }
+       else
+         rec_ps->rval = rval;
    }
    else
       recGblSetSevr((dbCommon *)rec_p,cur_stat,cur_sevr);
@@ -289,7 +290,7 @@ static long ai_rd_record(void *rec_p)
 
   Abs:  Linear conversion routine
 
-  Name: ai_special_linconv
+  Name: special_linconv_ai
 
   Args: rec_p                      Record information
           Use:  struct
@@ -309,13 +310,15 @@ static long ai_rd_record(void *rec_p)
          OK     - Successful operation (always)
 
 =============================================================*/
-static long ai_special_linconv(void *rec_p,int after)
+static long special_linconv_ai(void *rec_p,int after)
 {
-  long             status = OK;
-  struct aiRecord *ai_ps  = (struct aiRecord *)rec_p;
+  long              status = OK;       /* return status  */
+  struct aiRecord  *rec_ps = (struct aiRecord *)rec_p;
 
   if(after)
-     ai_ps->eslo = (ai_ps->eguf - ai_ps->egul)/slope;
+  {
+     rec_ps->eslo = (rec_ps->eguf - rec_ps->egul)/slope;
+  }
   return(status);
 }
 

@@ -10,11 +10,13 @@
 	   * hytec_ipmGetByLoc   - Get ptr to card info by carrier and slot
 	   * hytec_ipmGetByName  - Get ptr to card info by name
            * hytec_ipmInit       - Initialize card configuation structure
-             hytec_ipmInitDev    - Initialize device structure  
+             hytec_ipmInitDev    - Initialize device structure 
+	   * hytec_analyzeINP    - Analyze input string.
              hytec_ipmIsr        - Interrupt handler
              hytec_ipmReport     - Display card linked list information (output to stdio)
 	   * hytec_ipmValidate   - Validate IPAC module model at the given carrier & slot 
- 
+             hytec_ipmCalEnb     - Enable/Disable calibration
+
           * indicates static routines
   
 
@@ -55,18 +57,25 @@ static ELLLIST cardList_s = {{ NULL,NULL },0};
 
 /* Local Error Messages */
 static const char *cardErr_c     ="Card name was not specified!\n";
-static const char *invModelErr_c ="Carrier %hd slot %hd does not have a Hytec model IP-%x\n";
-static const char *noModErr_c    ="Carrier %hd slot %hd has no module\n";
-static const char *badIdErr_c    ="Carrier %hd slot %hd has an invalid IPAC Identifier of %.4s\n";
+static const char *invModelErr_c ="Card %hd slot %hd does not have a Hytec model IP-%x\n";
+static const char *noModErr_c    ="Card %hd slot %hd has no module\n";
+static const char *badIdErr_c    ="Card %hd slot %hd has an invalid IPAC Identifier of %.4s\n";
 static const char *addrErr_c     ="Bad carrier %hd or bad slot %hd\n";
 static const char *dupNameErr_c  ="Hytec module name %s already exists!\n";
-static const char *dupCardErr_c  ="Carrier %ud slot %ud already exists!\n";
+static const char *dupCardErr_c  ="Carrier %hd slot %hd already exists!\n";
 static const char *memErr_c      ="Memory allocation error\n";
-static const char *initErr_c     ="Carrier %ud slot %ud module initialization failed!\n";
-static const char *inpErr_c      ="Record %s INP/OUT %s field is empty!\n";
-static const char *illInpErr_c   ="Record %s INP/OUT %s format is illegal!\n";
-static const char *regErr_c      ="Record %s Hytec IP-ADC-%hx %s is not registered!\n";
-static const char *rngErr_c      ="Record %s channel number %d is out of range!\n"; 
+static const char *initErr_c     ="Card %hd slot %hd module initialization failed!\n";
+static const char *inpErr_c      ="Record %s INP/OUT field is empty!\n";
+static const char *illInpErr_c   ="Record %s INP/OUT format is illegal - %s!\n";
+static const char *regErr_c      ="Record %s Hytec IP-ADC card %s is not registered!\n";
+static const char *rngErr_c      ="Record %s channel number %hd is out of range!\n"; 
+static const char *bitRngErr_c   ="Record %s bit number %hd is out of range!\n";
+static const char *offErr_c      ="Record %s word offset %hd is out of range!\n";
+static const char *InvTypeErr_c  ="Record %s record type is not supported!\n";
+
+
+/* Globals */
+extern int debugHy8413;
 
 /* Local prototypes */
 static long hytec_ipmInit( char const * const  name_c,
@@ -87,7 +96,13 @@ static long hytec_ipmCreate( char const * const name_c,
 static void * hytec_ipmGetByName( char const * const  name_c );
 static void * hytec_ipmGetByLoc( unsigned short  carrier,  
                                  unsigned short  slot );
+static long hytec_analyzeINP( char const      * const name_c,
+                              char const      * const string_c,
+                              IPADC_ID        * const card_pps,
+                              short           * const chan_p,
+                              short           * const reg_type );
 
+   
 /*===================================================
  
   Abs:  Add the ipac module a card configuration
@@ -419,7 +434,9 @@ static long hytec_ipmInit( char const * const  name_c,
                            unsigned char       vector,
                            IPADC_ID const      card_ps )
 {
-  long status = OK;
+  long     status = OK;
+  unsigned short i = 0;
+
 
   card_ps->carrier = carrier;
   card_ps->slot    = slot;
@@ -430,20 +447,44 @@ static long hytec_ipmInit( char const * const  name_c,
   * Get the base address of the id, 
   * io registers and memory address if available
   */
-  card_ps->id_ps = (ipac_idProm_t *)ipmBaseAddr(carrier, slot, ipac_addrID);
+  card_ps->id_pu = (hytec_ipac_idProm_tu *)ipmBaseAddr(carrier, slot, ipac_addrID);
   card_ps->io_p  = ipmBaseAddr(carrier, slot, ipac_addrIO); 
   card_ps->mem_p = (unsigned short *)ipmBaseAddr(carrier, slot, ipac_addrMem);
 
   /* Get model number of module */
-  card_ps->model = card_ps->id_ps->modelId;
+  card_ps->model = card_ps->id_pu->hytec_s.modelId;
 
-  /* Perform sepcial card initialization */
-  if ( card_ps->model==HYTEC_IP8413_MODEL )
-    status = drvHy8413_init( (void *)card_ps,mask );
-  else {
+  /* Get serial number of module */
+  card_ps->serialNo = card_ps->id_pu->hytec_s.serialNo;
+
+  /* Get firmware revision */
+  card_ps->rev = card_ps->id_pu->hytec_s.revision;
+
+  /* Perform special card initialization based on model */
+  switch ( card_ps->model ) 
+  {
+      case HYTEC_IP8413_MODEL:
+       status = drvHy8413_init( (void *)card_ps,mask );
+       break;
+
+      default: /* Not supported yet */
+       status = ERROR;
+       break;
+  }/* End of switch statement */
+
+  /* Setup some device support initialization for binary inputs */
+  if (status==OK ) 
+  {
     card_ps->lock  = epicsMutexMustCreate();
-    scanIoInit(&card_ps->ioscanpvt);
+    scanIoInit(&card_ps->fifo_s.ioscanpvt);
+    for (i=0; i<MAX_BITS; i++)
+    {
+      scanIoInit( &card_ps->mbbiScan_a[i] );
+      scanIoInit( &card_ps->biScan_a[ReadACR][i] );
+      scanIoInit( &card_ps->biScan_a[ReadCSR][i] );
+    }
   }
+ 
   return( status );
 } 
          
@@ -572,13 +613,13 @@ static void * hytec_ipmGetByLoc(unsigned short   carrier,
           Acc:  read-only access
           Mech: By reference
 
-        func                        Type of function to perform
+         rec_type                   Type of record 
           Use:  integer
-          Type: unsigned short 
+          Type: unsigned short
           Acc:  read-only access
           Mech: By value
 
-         nelm                       Number of elements to read
+         nelm                       Number of items in list 
           Use:  integer
           Type: unsigned short
           Acc:  read-only access
@@ -601,50 +642,209 @@ static void * hytec_ipmGetByLoc(unsigned short   carrier,
          Otherwise - Address of private device info
 
 =============================================================*/
-void * hytec_ipmInitDev( char const * const  rec_name_c,
-                         unsigned short      func, 
-                         unsigned short      nelm,
-                         char const * const  string_c)
+void * hytec_ipmInitDev( char const *  const          rec_name_c,
+                         unsigned short               rec_type,
+                         unsigned short               nelm,
+                         char const *  const          string_c )
 {
-   unsigned short  chan   = 0;
-   size_t          bcnt   = sizeof(hytec_devicePvt_ts);
-   char            name_c[MAX_CA_STRING_SIZE];
-   char            parm_c[MAX_CA_STRING_SIZE];
-   IPADC_ID        card_ps   = NULL;
-   DPVT_ID         devPvt_ps = NULL;
+   long                 status     = OK;
+   short                reg_type   = 0;
+   short                chan       = 0;
+   short                offset,bitNo;
+   size_t               bcnt = sizeof(hytec_devicePvt_ts);
+   DPVT_ID              devPvt_ps  = NULL;
+   IPADC_ID             card_ps    = NULL;
 
 
-    if ( !string_c || !strlen(string_c) )
+    /* Analyze the record INP/OUP field */
+    status = hytec_analyzeINP( rec_name_c, string_c, &card_ps, &chan, &reg_type );
+    if ( status!=OK )  return( (void *)devPvt_ps );
+    
+    switch( rec_type ) 
+    { 
+         case TYPE_WF:
+         case TYPE_AI:
+	   if ((card_ps->nchan<= chan ) || (chan<0))
+           {
+ 	      errlogPrintf(rngErr_c,rec_name_c,chan);
+              status = ERROR;
+	   } 
+           break;
+
+         case TYPE_MBBI:
+           offset = chan;
+           if ((reg_type==ReadCAL) && (offset>=IPAC_ID_SPACE_WCNT))
+	    {
+              errlogPrintf(offErr_c,rec_name_c,offset);
+              status = ERROR;
+	      break;
+	    }
+	  
+         case TYPE_BO:
+         case TYPE_BI:
+           bitNo = chan;
+	   if ( (bitNo >= MAX_BITS) || (bitNo < 0) )
+	   {
+	     errlogPrintf(bitRngErr_c,rec_name_c,bitNo);
+             status = ERROR;
+	   }
+           break;
+
+         case TYPE_LI:
+           offset = chan;
+	   if ( offset>=IPAC_ID_SPACE_WCNT )
+	   {
+              status = ERROR;
+              errlogPrintf(offErr_c,rec_name_c,offset);
+	   }
+           break;
+
+        default:
+	    errlogPrintf(InvTypeErr_c,rec_name_c);
+            status = ERROR;
+            break;
+    } /* End of switch statement */      
+
+   /* 
+    * If the record type is valid with respect to the INP/OUP field
+    * then allocate memory for the private device information that
+    * is returned to the device support.
+    */
+    if (status==OK)
     {
-        errlogPrintf( inpErr_c, rec_name_c );
-    }
-    /* Analyze the record INP field */
-    if ( sscanf(string_c,"%[^:]:%hd:%[^:]",name_c,&chan,parm_c ) != 3 )
-    {
-        errlogPrintf( illInpErr_c, rec_name_c, string_c);
-    }
-    else 
-    {
-      card_ps = hytec_ipmGetByName(name_c);
-      if( !card_ps )
-      {
-         errlogPrintf(regErr_c,rec_name_c,card_ps->model,name_c);
-      }
-      else if( chan >= card_ps->nchan )
-      {
-	errlogPrintf(rngErr_c,rec_name_c,chan);
-      }
-      else 
-      { 
-         devPvt_ps = (DPVT_ID)callocMustSucceed(1,bcnt,"Init record for IP-ADC-8413");
-         devPvt_ps->card_ps  = card_ps;
-         devPvt_ps->nelm     = nelm;
-         devPvt_ps->chan     = chan;
-         devPvt_ps->func     = (hytec_func_te)func;
-      }
+      /*  devPvt_ps = (DPVT_ID)callocMustSucceed(1,bcnt,rec_name_c); */
+       devPvt_ps = (DPVT_ID)calloc(1,bcnt);
+       if ( devPvt_ps )
+       {
+	 devPvt_ps->card_ps = card_ps;
+         devPvt_ps->i       = chan;
+         devPvt_ps->func    = reg_type;
+         devPvt_ps->recType = rec_type;
+         devPvt_ps->nelm    = nelm;
+       }
+       else {
+         errlogPrintf(memErr_c);
+	 status = ERROR;
+       }
     }
     return( (void *)devPvt_ps );
 }
+
+/*=============================================================
+
+  Abs:  Analyze the INP/OUP field of the Hytec IP-ADC record
+
+  Name: hytec_analyzeINP
+
+  Args: name_c                     Record name
+          Use:  ascii-string        Note: NULL terminated
+          Type: char const * const
+          Acc:  read-only access
+          Mech: By reference
+
+        string_c                    INP/OUT field opf record
+          Use:  ascii-string        Note: NULL terminated
+          Type: char const * const 
+          Acc:  read-only access
+          Mech: By reference
+
+        card_pps                    Card information information 
+          Use:  pointer             
+          Type: IPADC_ID *
+          Acc:  read-write access
+          Mech: By reference
+
+        chan_p                      Channel or bit number 
+          Use:  pointer
+          Type: short *
+          Acc:  read-write access
+          Mech: By reference
+
+        reg_type_p                   Register type
+          Use:  pointer
+          Type: short *
+          Acc:  read-write access
+          Mech: By reference
+
+
+
+  Rem: This routine analyzed the EPICS pv INP/OUP field and
+       initializes the private device information structure.
+
+  Side: None
+
+  Ret: long 
+         OK    - Successful operation
+         ERROR - Failure
+
+=============================================================*/
+static long hytec_analyzeINP( char const      * const name_c,
+                              char const      * const string_c,
+                              IPADC_ID        * const card_pps,
+                              short           * const chan_p,
+                              short           * const reg_type_p )
+{
+    long                status  = ERROR;
+    unsigned short      i = 0;
+    unsigned short      found  = 0;
+    char                parm_c[MAX_CA_STRING_SIZE];
+    char                card_c[MAX_CA_STRING_SIZE];
+    static char        *reg_c[6] = { REG_IO_CSR, 
+                                     REG_IO_ACR, 
+                                     REG_IO, 
+                                     REG_ID, 
+                                     REG_SW_CAL, 
+                                     REG_IO_DATA };
+
+    /* Initialize return values */
+    *card_pps   = NULL;
+    *chan_p     = 0;
+    *reg_type_p = 0;
+
+    if ( !string_c || !strlen(string_c) ) 
+    {
+      errlogPrintf( inpErr_c, name_c );
+      return(status);
+    }
+
+    /* Analyze the record INP/OUP field */
+    if ( sscanf(string_c,"%[^:]:%hd:%[^:]",card_c, chan_p, parm_c ) != 3 )
+    {
+       errlogPrintf( illInpErr_c, name_c, string_c);
+       return( status);
+    }
+
+    /*
+     * Determine if the type of memory is valid for this device.
+     * Search the mode list provided as an input argument.
+     */
+    for (i=0,found=0; (i<REG_TYPE_NUM) && !found; i++)
+    {  
+       if (strcmp(parm_c,reg_c[i])==0 )
+       {
+	  found       = 1;
+          *reg_type_p = i;
+       }
+    } /* End of FOR loop */
+
+    if ( !found ) 
+       errlogPrintf( illInpErr_c, name_c, string_c);
+    else 
+    {
+
+      /* Is the card specified online? */
+      *card_pps = hytec_ipmGetByName( card_c );
+      if( *card_pps == NULL )
+      {
+        errlogPrintf( regErr_c, name_c, card_c );
+        return( status );
+      }
+      else      
+        status = OK;
+    }
+    return( status );
+}
+
 
 void hytec_ipmIsr( int param )
 {
@@ -700,4 +900,90 @@ void hytec_ipmReport( int level )
              card_ps->name_c); 
   }/* End of FOR loop */
   return;
+}
+
+
+/*====================================================
+ 
+  Abs:  Enable/Disable calibration for specified channel
+ 
+  Name: hytec_ipmCalEnb
+ 
+  Args: name_c                       Card name
+          Type: char-string
+          Use:  char const * const
+          Acc:  read-only
+          Mech: By reference
+
+         chan                        Channel number
+          Type: integer
+          Use:  short *
+          Acc:  read-only
+          Mech: By value
+
+         enb                         Enable flag 
+          Type: integer              0=disable, 1=enable
+          Use:  unsigned short *
+          Acc:  read-only
+          Mech: By value
+
+  Rem:  The purpose of this function is to enable
+        or disable the use of the calibration data
+        by setting a flag in the module configuration
+        information.
+
+ 
+  Side: None
+  
+  Ret:  long
+            OK    - Successful
+            ERROR - Failure has occured.
+            
+=======================================================*/ 
+long hytec_ipmCalEnb( char const * const name_c, short chan, unsigned short enb )
+{
+    long           status  = OK;      /* status return    */
+    unsigned short i = 0;             /* channel index    */
+    IPADC_ID       card_ps = NULL;    /* card information */
+
+    /* Is the card specified online? */
+    card_ps = hytec_ipmGetByName(name_c);
+    if ( card_ps )
+    {
+      /* Are we setting the enable flag for all channels? */
+      if (chan==-1) 
+      {
+        for (i=0; i<card_ps->nchan; i++)
+	  card_ps->cal_s.chan_as[i].enb = enb;
+      }
+      /* Are we setting the enable flag for a specific channel? */
+      else if ( (chan>=0) && (chan<card_ps->nchan) )
+      {
+	if ( enb )
+	{
+         /* 
+	  * Is calibration data available for this module? 
+	  * If yes, then eable the use of the calibration data.
+	  * Otherwise, return an error.
+	  */
+	  if ( card_ps->cal_s.enb ) 
+	    card_ps->cal_s.chan_as[chan].enb = 1; 
+          else
+	    status = ERROR;
+         }
+	else
+	    card_ps->cal_s.chan_as[chan].enb = 0;
+      }	
+      else
+      {
+         errlogPrintf("IP8413: Invalid channel number %hd specified\n",chan);
+         status = ERROR;
+      }  
+    }
+    else
+    {
+      errlogPrintf("IP8413: Unable to find card %s\n",name_c);
+      status = ERROR;
+    }
+    return(status);
 }

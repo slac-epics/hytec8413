@@ -19,7 +19,7 @@
 #
 #=============================================================
 #
-TOP=..
+TOP=../..
 include $(TOP)/configure/CONFIG
 #----------------------------------------
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
@@ -33,6 +33,13 @@ DBD += devHy8413.dbd
 # Add locally compiled object code
 Hy8413_SRCS += drvHy8413.c
 Hy8413_SRCS += devAiHy8413.c
+Hy8413_SRCS += devBiHy8413.c
+Hy8413_SRCS += devBoHy8413.c
+Hy8413_SRCS += devLiHy8413.c
+Hy8413_SRCS += devMbbiHy8413.c
+Hy8413_SRCS += devMbbiDirectHy8413.c
+Hy8413_SRCS += devMbboHy8413.c
+Hy8413_SRCS += devWfHy8413.c
 Hy8413_SRCS += hytecIpm.c
 
 #=======================================

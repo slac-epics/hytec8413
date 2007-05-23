@@ -22,26 +22,37 @@
 #define DRVHY8413LIB_H
 
 /* Interrupt Service Routine */ 
-void drvHy8413_isr( int param );              /* module configuration infor         */
+void drvHy8413_isr( int param );                    /* module configuration infor     */
 
 /*
  * Write to the control register of specified card 
  */
 long drvHy8413_wt_csr(
-          volatile void * const  io_p,             /* io base address                */
-          unsigned short         mask,             /* bit mask for csr               */
-          unsigned short         val               /* state of mask bits to set      */
+          volatile unsigned short * const   io_p,   /* io base address                */
+          unsigned short                    mask,   /* bit mask for csr               */
+          unsigned short                    val     /* state of mask bits to set      */
                     );
 
 /*
  * Write to the auxilary control register of specified card
  */
 long drvHy8413_wt_acr(
-          volatile void  * const  io_p,             /* io base address                */
-          unsigned short          mask,             /* bit mask for csr               */
-          unsigned short          val               /* state of mask bits to set      */
+          volatile unsigned short  * const  io_p,   /* io base address                */
+          unsigned short                    mask,   /* bit mask for csr               */
+          unsigned short                    val     /* state of mask bits to set      */
                     ); 
 
+/*
+ * Set id prom page in auxilliary control register
+ */
+long drvHy8413_wt_page(
+          volatile void            * const  io_p,   /* io base address                */
+          unsigned short                    val     /* page number                    */
+                      ); 
+
+/*
+ * Read control status register
+ */
 long drvHy8413_rd_status(
           volatile unsigned short  * const  io_p ,  /* io base address                */
           unsigned short           * const  val_p   /* data read from status reg      */
@@ -53,22 +64,22 @@ long drvHy8413_rd_status(
  * is used.
  */
 long drvHy8413_rd(
-          void           * const      io_p,        /* card info           */
-          unsigned short              chan,        /* channel number      */
-          short          * const      val_p        /* adc data            */
+          volatile unsigned short  * const  io_p,   /* io base             */
+          unsigned short                    chan,   /* channel number      */
+          short                    * const  val_p   /* adc data            */
                        );
 
 /*
  * Display adc data to standard output.
  */
-void drvHy8413_dump_data( void const * const io_p );
+void drvHy8413_dump_adc_data( volatile unsigned short const * const io_p );
 
 /*
  * Initialize adc according to bitmask supplied as an 
  * input argument.
  */
 long drvHy8413_init(
-          void           * const      card_p,      /* card info           */
+          void           * const      card_p,    /* card info           */
           unsigned long               mask 
           );
 
@@ -86,4 +97,15 @@ long ip8413Create(
           unsigned char      vector              /* Interrupt vector                   */
 	  );
  
+/*
+ * This function scales the raw adc value using
+ * the calibration data.
+ */
+long  drvHy8413_cal_adc(
+         unsigned short const * const gain_a,
+         unsigned short               calType,
+         unsigned short               format,
+         long                         val
+          );
+
 #endif /* DRVHY8413LIB_H */
