@@ -9,7 +9,14 @@
 #  Auth: 22-May-2007, K. Luchini         (LUCHINI)
 #  Rev:  dd-mmm-yyyy, Reviewer's Name    (USERNAME)
 #--------------------------------------------------------------
+#  Mod:
+#        02-Jul-2007, K. Luchini         (LUCHINI):
+#          add release hytec8413-R1-1-0
 #
+#==============================================================
+#
+hytec8413-R1-1-0:Build with ipac-R1-0-0 instead of ipac/Devl
+
 hytec8413-R1-1:  Add calibration and more device support.
 
 hytec8413-R1-0:  Modify configure/RELEASE to use new build area
