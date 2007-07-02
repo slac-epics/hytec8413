@@ -3,7 +3,7 @@
 # top directory each time this file is changed.
 
 EPICS_MODULES=/afs/slac/g/lcls/build/epics/modules
-IPAC=$(EPICS_MODULES)/ipac/Devl
+IPAC=$(EPICS_MODULES)/ipac/ipac-R1-0-0
 
 # EPICS_BASE usually appears last so other apps can override stuff:
 EPICS_BASE_RELEASE=/afs/slac/g/lcls/build/epics/base/base-R1-0-0
