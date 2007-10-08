@@ -11,7 +11,8 @@
 #--------------------------------------------------------------
 #  Mod:
 #        Oct-08-2007, K. Luchini         (LUCHINI):
-#          add release hytec8413-R1-1-13
+#          add release hytec8413-R1-1-4
+#          add release hytec8413-R1-1-3
 #        30-Aug-2007, K. Luchini         (LUCHINI):
 #          add release hytec8413-R1-1-2
 #        29-Aug-2007, K. Luchini         (LUCHINI):
@@ -21,7 +22,11 @@
 #
 #==============================================================
 #
-hytec8413-R1-1-3:Build with base-R3-14-8-lcls2
+hytec8413-R1-1-4:Build with base-R3-14-9-lcls1 (RTEMS 4.7.1)
+                 Build with extensions-R3-14-9
+                 Build with ipac-R2-8-lcls2
+
+hytec8413-R1-1-3:Build with base-R3-14-8-lcls2 (RTEMS 4.7.1)
                  Build with ipac-R1-0-3
                  Build with ipac-R2-8-lcls1
 
