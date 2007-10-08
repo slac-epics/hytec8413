@@ -10,6 +10,8 @@
 #  Rev:  dd-mmm-yyyy, Reviewer's Name    (USERNAME)
 #--------------------------------------------------------------
 #  Mod:
+#        Oct-08-2007, K. Luchini         (LUCHINI):
+#          add release hytec8413-R1-1-13
 #        30-Aug-2007, K. Luchini         (LUCHINI):
 #          add release hytec8413-R1-1-2
 #        29-Aug-2007, K. Luchini         (LUCHINI):
@@ -19,6 +21,10 @@
 #
 #==============================================================
 #
+hytec8413-R1-1-3:Build with base-R3-14-8-lcls2
+                 Build with ipac-R1-0-3
+                 Build with ipac-R2-8-lcls1
+
 hytec8413-R1-1-2:Build with ipac-R1-0-2 instead of ipac-R1-0-1
 
 hytec8413-R1-1-1:Build with ipac-R1-0-1 instead of ipac-R1-0-0
