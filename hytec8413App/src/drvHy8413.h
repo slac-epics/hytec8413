@@ -74,7 +74,7 @@ extern "C" {
 /* Clock Rate register */
 #define HY8413_CLK_RATE_MASK 0xf    
 #define HY8413_MIN_CLK_RATE  0
-#define HY8413_MAX_CLK_RATE  15
+#define HY8413_MAX_CLK_RATE  16
 
 /*
  * The external FIFO, when triggered will store 16384 16-bit words samples for each channel.
@@ -287,7 +287,7 @@ typedef enum {
  *   1   0    2     Calibration values for ADC Channel 6-11
  *   1   1    3     Calibration values for ADC Channel 12-16
  */
-#define HY8413_ACR_MASK          0x003F  /* Register Mask */
+#define HY8413_ACR_MASK         0x1FFF  /* Register Mask (SLAC Version) */
 
 /* 
  * Sets the range of the ADCs such that
@@ -363,6 +363,109 @@ typedef enum
     pg6=6
 }hy8413_pg_te;
 
+/*
+ * Averager ENable bit enables the data averager subsystem. When enabled, 64 successive
+ * samples will be summed and divided by 64. The results are then stored in the ADC
+ * Data Register. Note that when enabled, the averaging started as soon as the next 
+ * ADC sample clock occurs, as lon as the ADC has been set to the normal operation,
+ * is ARMed and receives the appropriate triggers.
+ * NOTE: Available only in the SLAC version with averaging.
+ */
+#define HY8413_ACR_AEN       0x0080 
+#define HY8413_ACR_AEN_SHFT   7
+
+/*
+ * ADN/BUF (A/B): Bit 8
+ * This is a dual-mode type, set by the state of the SAM mode bit. 
+ *
+ * Polling Mode (SAM=0)
+ * ADN Read/Write - Special!
+ * Averager DoNe: This bit indicates when the average operation has been 
+ * completed and valud averaged data is present in the ADC Readout 
+ * Registers (Regs 0x10-0x30). Note that this is a dual-use bit. In 
+ * read mode, it indicates a done state, in write mode,setting a 1"
+ * tells the averager subsystem that its last results have been readout
+ * and that it can now resume averaging the next set of 64 samples. 
+ * When SAM Readout Mode is enabled, writing to this bit has no effect.
+ *   Read:  
+ *      0= averaging not done
+ *      1= averaging done
+ * 
+ *   Write: 
+ *      0 = no action
+ *      1 = Readout complete, start averaging the next sset of 
+ *          samples. Note that this bit MUST be set to "0".
+ * SAM Mode: (SAM=1) 
+ * Indicates which of the two ping-pong buffers is ready for
+ * NOTE: Available only in the SLAC version with averaging.
+ */
+#define HY8413_ACR_ADN       0x0100 
+#define HY8413_ACR_ADN_SHFT  8
+
+/*
+ * ASR: Bit 9
+ * ADC Readout Select, this bit selects whether the ADC Readout
+ * Registers (rev 0x10-0x30) contain the latest digitized values
+ * or the averaged data values. This bit can be changed at any time.
+ * NOTE: Available only in the SLAC version with averaging.
+ */
+#define HY8413_ACR_ARS       0x0200 
+#define HY8413_ACR_ARS_SHFT  9
+
+#define HY8413_ARS_NORMAL    0
+#define HY8413_ARS_AVE       1
+
+/*
+ * AINI: Bit 10
+ *  Averager INItialize initializes the average subsystem,
+ * which 
+ *     1. resets all state machine
+ *     2.  zeroes out all counters
+ *     3. sets all averager logic to the idle state 
+ *   0=
+ * NOTE: Available only in the SLAC version with averaging.
+ */
+#define HY8413_ACR_AINI       0x0400 
+#define HY8413_ACR_AINI_SHFT  10
+
+#define HY8413_AINI_NORMAL    0
+#define HY8413_AINI_INIT      1
+
+/*
+ * SAM: Bit 11
+ * SAM Mode Enable: Enables SAM readout mode, where
+ * the averaged data is automatically written into an
+ * output buffer while another buffer accumulates sampled
+ * data. When a new set of averages is available, the buffers
+ * are automaticallly swapped.
+ * NOTE: Available only in the SLAC version with averaging.
+ */
+#define HY8413_ACR_SAM       0x0800 
+#define HY8413_ACR_SAM_SHFT  11
+
+#define HY8413_SAM_DIS       0  /* disabled */
+#define HY8413_SAM_ENB       1  /* enabled  */
+
+/*
+ * BUF: Bit 12
+ * Readout BUFfer Status: In SAM Readout Mode, this bit
+ * indicates which of the two ping-pong buffers is ready for
+ * readout. As a convenience, changes in the state of this bit
+ * can be monitored by software to indicate when new data is
+ * available.
+ *
+ *  Read Only (while in SAM Mode)
+ *     0 = Buffer A is available for external readout
+ *     1 = Buffer B is available for externaml readout
+ *
+ * NOTE: Available only in the SLAC version with averaging.
+ */
+
+#define HY8413_ACR_BUF       0x1000 
+#define HY8413_ACR_BUF_SHFT  12
+
+#define HY8413_BUF_A       0  /* Buffer A is available for external readout  */
+#define HY8413_BUF_B       1  /* Buffer B is available for external readout */
 
 /************************************************************
 
