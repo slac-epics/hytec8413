@@ -15,6 +15,10 @@
           *  drvHy8413_rd_cal_page   - read channel data from a specified id prom page
              drvHy8413_cal_adc       - calibrate raw adc data
              drvHy8413_wt_page       - set the id prom page in the auxillary control register
+             drvHy8413_ARM           - start/stop sampling adc data at sample rate
+             drvHy8413_wt_clk_rate   - set the clock rate register
+             drvHy8413_rd_clk_rate   - read the clock rate register
+             drvHy8413_init_sam_mode - Initilize the SAM Readout Mode in the ACR (v2 only)
              drvHy8413_init          - Module initialization called before iocInit()
              ip8413Create            - Module specific Wrapper for hyec_addIpAdc()
  
@@ -51,7 +55,7 @@
 #include "hytecIpm.h"
 #include "hytecIpmLib.h"
 #include "drvHy8413Lib.h" 
-#include "epicsExport.h"     
+#include "epicsExport.h"   
 
 /* Local Prototypes */
 static long drvHy8413_init_driver( void );
@@ -495,12 +499,12 @@ long drvHy8413_cal_adc( unsigned short  const * const gain_a,
      long               offset=0;
      long               resol=65535;
      long               rng=0;
-     long               zero_a[2]={TWOS_COMPLIMENT_ZERO,OFFSET_BINARY_ZERO};
+ /*  long               zero_a[2]={TWOS_COMPLIMENT_ZERO,OFFSET_BINARY_ZERO}; */
      long               ref_rng_a[2]={0x3ff8,0x3ff9};
-     long               offset_a[4]= {0xbff8,  /* -15V in counts remaining, from -10 to +5V */
+     long               offset_a[4]= {0xbff8,  /* -15V in counts remaining, from -10 to +5V  */
                                       0x7fff,  /* -10V in counts remaining, from -10 to  0V  */
                                       0x8000,  /* +10V in counts remaining, from   0 to +10V */
-                                      0x4007}; /* +15V in counts remaining, from +10 to -5V */
+                                      0x4007}; /* +15V in counts remaining, from +10 to -5V  */
                                      
      switch(calType) 
      {
@@ -838,6 +842,217 @@ long drvHy8413_wt_page( volatile void  * const io_p,unsigned short  val )
   return( status );
 }
 
+/*====================================================
+ 
+  Abs:  Start/Stop sampling inputs at the sample clock rate 
+ 
+  Name: drvHy8413_ARM
+ 
+  Args: io_p                          Ptr to io memory 
+          Type: address               
+          Use:  volatile unsigned short * const           
+          Acc:  read-write               
+          Mech: By reference   
+
+        val                            State to set
+          Type: bitmask                Note: 0=start sampling
+          Use:  unsigned short               1=stop sampling
+          Acc:  read-only                
+          Mech: By value    
+
+  Rem: This function reads the clock rate register
+
+  Side: None
+ 
+  Ret:  long
+            OK    - Successful
+            ERROR - Failure, due to invalid carrier/slot
+    
+=======================================================*/
+long drvHy8413_ARM( volatile unsigned short  *  const  io_p, 
+                    unsigned short val )
+{
+   long       status = OK;
+   HY8413_IO  io_ps  = NULL;
+
+
+  io_ps = (HY8413_IO)io_p;
+  if ( val ) 
+     io_ps->acr |= HY8413_CSR_ARM; /* Start sampling */
+  else
+     io_ps->acr &= ~HY8413_CSR_ARM;   /* Stop sampling  */
+  return(status); 
+}
+
+/*====================================================
+ 
+  Abs:  Write clock rate 
+ 
+  Name: drvHy8413_wt_clk_rate
+ 
+  Args: carrier                        IP Carrier Card Number 
+          Type: integer                Note: 0...196
+          Use:  int
+          Acc:  read-only
+          Mech: By value
+
+        slot                           IP Carrier Port Number  
+          Type: integer                Note: 0=port A
+          Use:  int                          1=port B
+          Acc:  read-only                    2=port C
+          Mech: By value                     4=port D   
+
+         val                           Clock rate (0-15)
+          Type: bitmask                  
+          Use:  unsigned short                 
+          Acc:  read-only                
+          Mech: By value                      
+ 
+  Rem: This function sets the clock rate.
+
+  Side: None
+ 
+  Ret:  long
+             OK    - Successful operation
+             ERROR - Failure
+ 
+=======================================================*/
+long drvHy8413_wt_clk_rate( volatile unsigned short  *  const  io_p,
+                            unsigned short                     val )
+{
+  long           status  = OK;
+  HY8413_IO      io_ps   = NULL;
+
+  /*
+   * Get the io address of this ipac module 
+   * and then verify that the clock rate 
+   * requested is valid
+   */  
+    io_ps = (HY8413_IO)io_p;
+    if ( val > HY8413_MAX_CLK_RATE )
+      status = ERROR;
+    else { 
+     io_ps->clk_rate = val & HY8413_CLK_RATE_MASK;
+
+      /* Verify that the clock rate has been set */
+      if ( io_ps->clk_rate != val ) 
+         status = ERROR;
+    }
+    return( status );
+}
+
+/*====================================================
+ 
+  Abs:  Read the clock rate 
+ 
+  Name: drvHy8413_rd_clk_rate
+ 
+  Args: carrier                        IP Carrier Card Number 
+          Type: integer                Note: 0...196
+          Use:  int
+          Acc:  read-only
+          Mech: By value
+
+        slot                           IP Carrier Port Number  
+          Type: integer                Note: 0=port A
+          Use:  int                          1=port B
+          Acc:  read-only                    2=port C
+          Mech: By value                     4=port D   
+
+  Rem: This function reads the clock rate register
+
+  Side: None
+ 
+  Ret:  short
+            OK  = clock rate (0-15)
+            -1  = Failure, due to invalid carrier and/or slot
+    
+=======================================================*/
+short  drvHy8413_rd_clk_rate( volatile unsigned short  *  const  io_p)
+{
+  HY8413_IO  io_ps   = NULL;
+ 
+  io_ps = (HY8413_IO)io_p;
+  return( io_ps->clk_rate );
+}
+
+/*====================================================
+ 
+  Abs:  Initialize SAM Readout Mode
+ 
+  Name: drvHy8413_init_sam_mode
+ 
+  Args: carrier                        IP Carrier Card Number 
+          Type: integer                Note: 0...196
+          Use:  int
+          Acc:  read-only
+          Mech: By value
+
+        slot                           IP Carrier Port Number  
+          Type: integer                Note: 0=port A
+          Use:  int                          1=port B
+          Acc:  read-only                    2=port C
+          Mech: By value                     4=port D   
+         
+  Rem: This function initilizes the module in 
+       SAM Readout Mode. This mode is only available
+       in the SLAC modified version (v2).
+
+  Side: None
+ 
+  Ret:  long
+             OK    - Successful operation
+             ERROR - Failure, due to invalid card/chan
+ 
+=======================================================*/
+long drvHy8413_init_sam_mode( volatile unsigned short  *  const  io_p )
+{
+  long           status  = OK;
+  unsigned short val     = 0;
+  HY8413_IO      io_ps   = NULL;
+ 
+  
+
+  /* Check if the module is armed. If so, the disarm from sampling data */
+  io_ps = (HY8413_IO)io_p;
+
+  /* Make sure the modules is not ARMed */
+  io_ps->csr &= ~HY8413_CSR_ARM;   /* Clear the ARM bit in the csr  */
+
+  /* Pulse the Initialize the Averager bit in the Auxiliary Control Register (ACR) */
+  io_ps->acr |= HY8413_ACR_AINI;   /* Set the AINI bit in the acr   */    
+  io_ps->acr &= ~HY8413_ACR_AINI;  /* Clear the AINI bit in the acr */
+
+  /* Enable the Averager */
+  io_ps->acr |= HY8413_ACR_AEN;
+  
+  /* Enable SAM Mode */
+  io_ps->acr |= HY8413_ACR_SAM;
+
+  /*
+   * Set board to begin sampling:
+   *
+   * First, set the Auxiliary Control Register (ACR) to normal operating modd.
+   */ 
+  io_ps->acr |= HY8413_ACR_NS;
+
+
+  /* Next set the Control Status Register (CSR) to ARM the board */
+  io_ps->csr |= HY8413_CSR_ARM;
+
+  /* Set the ADN/BUF bit and then check for a state change */
+  io_ps->csr |= HY8413_ACR_ADN;
+  val = io_ps->csr & HY8413_ACR_ADN;
+
+  /* 
+   * Finally, set Auxiliary Control Register (ACR)
+   * ADC Readout Select to Averaged Data readout mode. 
+   */
+  io_ps->acr |= HY8413_ACR_ARS;
+   
+  return( status );
+}
+
 
 /*====================================================
  
@@ -918,9 +1133,16 @@ long drvHy8413_wt_acr( volatile unsigned short  *  const  io_p,
                        unsigned short                     mask,
                        unsigned short                     val )
 {
-  long status = OK;
+  long           status = OK;
+  unsigned long  ival   = 0;
+  HY8413_IO      io_ps  = NULL;
+ 
+  io_ps = (HY8413_IO)io_p;
+  ival  = io_ps->acr & HY8413_ACR_MASK;
+  io_ps->acr = (ival & mask) | val;
   return( status );
 }
+
 
 /*====================================================
  
@@ -1022,9 +1244,9 @@ long drvHy8413_init( void * const card_p,unsigned long mask )
   IPADC_ID         card_ps = NULL;
   HY8413_IO        io_ps   = NULL;
 
-
+  
   /* 
-   * Set module in normal operating mode
+   * Always set module in normal operating mode
    * and use the two's compliment data format.
    */
   card_ps    = (IPADC_ID)card_p;
@@ -1061,7 +1283,15 @@ long drvHy8413_init( void * const card_p,unsigned long mask )
   status = drvHy8413_rd_cal_type( card_ps->id_pu->_a, &card_ps->cal_s );
   if ( status == OK )
     status = drvHy8413_rd_cal_data( card_ps );
-
+  
+  /* Set anything special for the init */
+  if ( (status == OK) && mask ) {
+     val = (mask >>16) & HY8413_CLK_RATE_MASK;
+     status = drvHy8413_wt_clk_rate( card_ps->io_p,val );
+     if ((status==OK) && (mask && 1))
+       status = drvHy8413_init_sam_mode( card_ps->io_p );
+  }      
+    
   /* flag init complete */
   if ( status==OK ) {
       card_ps->init = 1;

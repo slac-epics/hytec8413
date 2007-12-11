@@ -13,8 +13,10 @@
 
 -------------------------------------------------------------
   Mod:
-        dd-mmm-yyyy, First Lastname (USERNAME):
-           comments
+        05-Dec-2007, K. Luchini       (LUCHINI):
+         add hy8413_wt_clk_rate() prototype
+         add hy8413_rd_clk_rate() prototype
+         add hy8413_init_sam_mode() prototype
 
 =============================================================
 */
@@ -49,6 +51,41 @@ long drvHy8413_wt_page(
           volatile void            * const  io_p,   /* io base address                */
           unsigned short                    val     /* page number                    */
                       ); 
+
+/*
+ * Enable or disable samping adc data at sample clock rate/
+ */
+long drvHy8413_ARM(
+          volatile unsigned short * const   io_p,   /* io base address                */
+          unsigned short                    val     /* clock rate (0-15)              */
+                      ); 
+
+
+/*
+ * Set the clock rate
+ */
+long drvHy8413_wt_clk_rate(
+          volatile unsigned short  * const  io_p,   /* io base                        */
+          unsigned short                    val     /* clock rate (0-15)              */
+                      ); 
+
+
+/*
+ * Read the clock rate register. The value in the clock rate register is
+ * the return value (0-15).
+ */
+short drvHy8413_rd_clk_rate(
+          volatile unsigned short  * const  io_p    /* io base                        */
+                      ); 
+
+
+/*
+ * Initilize the modules (v2 only) to SAM Readout Mode
+ */
+long drvHy8413_init_sam_mode(
+          volatile unsigned short  * const  io_p    /* io base                       */
+                      );
+
 
 /*
  * Read control status register
