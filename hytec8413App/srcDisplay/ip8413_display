@@ -1,0 +1,65 @@
+#!/bin/bash
+#==============================================================
+#
+#  Abs:  Script to bring up the EDM ip-adc-8413 display 
+#
+#  Name: ip8413_display
+#
+#  Rem:  This script provides the appropriate macro
+#        definitions to bring up the hytec
+#        ip-adc-8413 module display
+#
+#        Prior to executing this script from the command
+#        line the user is required to setup the EPICS
+#        release and host architecture environment variables
+#        necessary to run edm.
+#
+#  Usage: ip8413_display [version]
+#          where version 1=default 2=SLAC
+#
+#         ex1) ip8413_display
+#         ex2) ip8413_display 1
+#         ex3) ip8413_display 2  
+#   
+#         The version argument is optional, where by
+#         if the argument is not supplied the default
+#         of "1" is used. This is shown in example ex1 a
+#         above and it will provide the standard display
+#         for the standard hytec ip-adc-8413 module. The
+#         example, ex2 will provide the same display.
+#         The example, ex3 will provide the display for
+#         the SLAC modified version if the ip-adc-8413
+#         module.         
+#
+#  Auth: 05-Dec-2007, K. Luchini       (LUCHINI)
+#  Rev:  dd-mmm-yyyy, Reviewer's Name  (USERNAME)
+#
+#--------------------------------------------------------------
+#  Mod: 
+#        dd-mmm-yyyy, First Lastname   (USERNAME):
+#          comments
+#
+#==============================================================
+#
+# set defaults
+name="ADC:IN20"
+card=1
+
+# Check input arguments
+if [ $# == 0 ]; then
+  edm -x -m "DEVICE=$name,C=$card" ip8413.edl
+elif [ $# == 1 ]; then
+  ver=$1
+  echo "version $ver"
+  if [ $ver == 1 ]; then
+     edm -x -m "DEVICE=$name,C=$card" ip8413.edl
+  elif [ $ver == 2 ]; then
+     edm -x -m "DEVICE=$name,C=$card" ip8413_v2.edl
+  else
+    echo "ip8413_display: invalid arguments"
+    echo "Usage: ip8413_display [version]"
+    echo "  version - module version 1-2, default=1 SLAC version=2"
+  fi
+fi
+
+# End of script

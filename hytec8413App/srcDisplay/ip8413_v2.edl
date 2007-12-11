@@ -1,0 +1,1885 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 167
+y 57
+w 575
+h 630
+font "helvetica-medium-r-12.0"
+ctlFont "helvetica-medium-r-12.0"
+btnFont "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 7
+textColor index 14
+ctlFgColor1 index 16
+ctlFgColor2 index 14
+ctlBgColor1 index 4
+ctlBgColor2 index 12
+topShadowColor index 1
+botShadowColor index 11
+title "Hytec IP-ADC-8413 Card $(C)"
+showGrid
+snapToGrid
+gridSize 8
+endScreenProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 8
+y 296
+w 552
+h 320
+lineColor index 3
+fill
+fillColor index 3
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 16
+y 304
+w 256
+h 296
+lineColor index 14
+fillColor index 4
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 288
+y 304
+w 264
+h 296
+lineColor index 14
+fillColor index 4
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x -16
+y 0
+w 592
+h 40
+lineColor index 62
+fill
+fillColor index 62
+lineWidth 0
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 8
+y 280
+w 136
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "IPAC Channels Data"
+}
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 512
+y 8
+w 48
+h 24
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "Exit"
+font "helvetica-medium-r-12.0"
+3d
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 8
+y 0
+w 232
+h 40
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 61
+useDisplayBg
+value {
+  "Hytec IP-ADC-8413 Modules"
+}
+endObjectProperties
+
+# (Shell Command)
+object shellCmdClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 448
+y 8
+w 48
+h 24
+fgColor index 14
+bgColor index 4
+topShadowColor index 1
+botShadowColor index 11
+font "helvetica-medium-r-12.0"
+buttonLabel "Help..."
+numCmds 0
+endObjectProperties
+
+# (Shell Command)
+object shellCmdClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 392
+y 8
+w 48
+h 24
+fgColor index 14
+bgColor index 4
+topShadowColor index 1
+botShadowColor index 11
+font "helvetica-medium-r-12.0"
+buttonLabel "Print..."
+numCmds 0
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 176
+y 312
+w 88
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Actual Voltage"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 136
+y 312
+w 32
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Ch"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 144
+y 344
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "0"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 144
+y 376
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "1"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 144
+y 408
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "2"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 144
+y 440
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "3"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 144
+y 472
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "4"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 144
+y 504
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "5"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 144
+y 536
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "6"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 144
+y 568
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "7"
+}
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 24
+y 352
+w 104
+h 16
+controlPv "$(DEVICE):$(C)01:VACT.DESC"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 24
+y 384
+w 104
+h 16
+controlPv "$(DEVICE):$(C)02:VACT.DESC"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 24
+y 416
+w 104
+h 16
+controlPv "$(DEVICE):$(C)03:VACT.DESC"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 24
+y 448
+w 104
+h 16
+controlPv "$(DEVICE):$(C)04:VACT.DESC"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 24
+y 480
+w 104
+h 16
+controlPv "$(DEVICE):$(C)05:VACT.DESC"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 24
+y 512
+w 104
+h 16
+controlPv "$(DEVICE):$(C)06:VACT.DESC"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 24
+y 544
+w 104
+h 16
+controlPv "$(DEVICE):$(C)07:VACT.DESC"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 24
+y 576
+w 104
+h 16
+controlPv "$(DEVICE):$(C)08:VACT.DESC"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 176
+y 344
+w 80
+h 24
+controlPv "$(DEVICE):$(C)01:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 176
+y 376
+w 80
+h 24
+controlPv "$(DEVICE):$(C)02:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 176
+y 408
+w 80
+h 24
+controlPv "$(DEVICE):$(C)03:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 176
+y 440
+w 80
+h 24
+controlPv "$(DEVICE):$(C)04:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 176
+y 472
+w 80
+h 24
+controlPv "$(DEVICE):$(C)05:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 176
+y 504
+w 80
+h 24
+controlPv "$(DEVICE):$(C)06:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 176
+y 536
+w 80
+h 24
+controlPv "$(DEVICE):$(C)07:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 176
+y 568
+w 80
+h 24
+controlPv "$(DEVICE):$(C)08:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 8
+y 56
+w 136
+h 16
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "IPAC Module Data"
+}
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 8
+y 72
+w 552
+h 192
+lineColor index 3
+fill
+fillColor index 3
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 152
+y 136
+w 128
+h 22
+controlPv "$(DEVICE):$(C)00:SERNO"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+nullColor index 9
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 16
+y 136
+w 96
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Serial Number:"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 16
+y 160
+w 104
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Revision Number:"
+}
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 152
+y 88
+w 128
+h 22
+controlPv "$(DEVICE):$(C)00:REV.DTYP"
+format "string"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 4
+nullColor index 4
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 16
+y 88
+w 96
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Model:"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 304
+y 112
+w 96
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Calibration:"
+}
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 424
+y 112
+w 128
+h 22
+controlPv "$(DEVICE):$(C)00:CALBTYPE"
+format "string"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+nullColor index 4
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 304
+y 136
+w 96
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Data Format:"
+}
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 424
+y 136
+w 128
+h 22
+controlPv "$(DEVICE):$(C)00:FORMAT"
+format "string"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+nullColor index 4
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 304
+y 88
+w 96
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Voltage Range:"
+}
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 424
+y 88
+w 128
+h 22
+controlPv "$(DEVICE):$(C)00:VRANGE"
+format "string"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+nullColor index 4
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 152
+y 160
+w 128
+h 22
+controlPv "$(DEVICE):$(C)00:REV"
+format "string"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+nullColor index 4
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 424
+y 160
+w 128
+h 22
+controlPv "$(DEVICE):$(C)00:MODE"
+format "string"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+nullColor index 4
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 304
+y 160
+w 96
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Operating Mode:"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 16
+y 112
+w 96
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Model Number:"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 40
+y 312
+w 64
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Device"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 424
+y 408
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "10"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 424
+y 336
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "8"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 424
+y 376
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "9"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 424
+y 440
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "11"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 424
+y 472
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "12"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 424
+y 504
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "13"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 424
+y 536
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "14"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 424
+y 568
+w 32
+h 24
+font "helvetica-medium-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "15"
+}
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 304
+y 352
+w 104
+h 16
+controlPv "$(DEVICE):$(C)09:VACT.DESC"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 304
+y 384
+w 104
+h 16
+controlPv "$(DEVICE):$(C)10:VACT.DESC"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 304
+y 416
+w 104
+h 16
+controlPv "$(DEVICE):$(C)11:VACT.DESC"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 304
+y 448
+w 104
+h 16
+controlPv "$(DEVICE):$(C)12:VACT.DESC"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 304
+y 480
+w 104
+h 16
+controlPv "$(DEVICE):$(C)13:VACT.DESC"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 304
+y 512
+w 104
+h 16
+controlPv "$(DEVICE):$(C)14:VACT.DESC"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 304
+y 536
+w 104
+h 24
+controlPv "$(DEVICE):$(C)15:VACT.DESC"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 304
+y 568
+w 104
+h 16
+controlPv "$(DEVICE):$(C)16:VACT.DESC"
+format "string"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 3
+nullColor index 16
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 456
+y 344
+w 80
+h 24
+controlPv "$(DEVICE):$(C)09:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 456
+y 376
+w 80
+h 24
+controlPv "$(DEVICE):$(C)10:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 456
+y 408
+w 80
+h 24
+controlPv "$(DEVICE):$(C)11:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 456
+y 440
+w 80
+h 24
+controlPv "$(DEVICE):$(C)12:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 456
+y 472
+w 80
+h 24
+controlPv "$(DEVICE):$(C)13:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 456
+y 504
+w 80
+h 24
+controlPv "$(DEVICE):$(C)14:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 456
+y 536
+w 80
+h 24
+controlPv "$(DEVICE):$(C)15:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 456
+y 568
+w 80
+h 24
+controlPv "$(DEVICE):$(C)16:VACT"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+autoHeight
+limitsFromDb
+nullColor index 4
+nullCondition "nullEq0"
+useAlarmBorder
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 408
+y 312
+w 32
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Ch"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 296
+y 312
+w 72
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Device"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 448
+y 312
+w 96
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Actual Voltage"
+}
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 152
+y 184
+w 128
+h 22
+controlPv "$(DEVICE):$(C)00:AENSTATUS"
+format "string"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+nullColor index 4
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 16
+y 184
+w 104
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Averager:"
+}
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 152
+y 232
+w 128
+h 22
+controlPv "$(DEVICE):$(C)00:ARSSTATUS"
+format "string"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+nullColor index 4
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 16
+y 232
+w 128
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "ADC Readout Select:"
+}
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 152
+y 208
+w 128
+h 22
+controlPv "$(DEVICE):$(C)00:AINISTATUS"
+format "string"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+nullColor index 4
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 16
+y 208
+w 128
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Averager Init:"
+}
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 424
+y 208
+w 128
+h 22
+controlPv "$(DEVICE):$(C)00:SAMMODE"
+format "string"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+nullColor index 4
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 304
+y 208
+w 128
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "SAM Mode:"
+}
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 152
+y 112
+w 128
+h 22
+controlPv "$(DEVICE):$(C)00:MODEL"
+format "hex"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+nullColor index 4
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 304
+y 184
+w 128
+h 24
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Internal Clock Rate:"
+}
+endObjectProperties
+
+# (Text)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 424
+y 184
+w 128
+h 22
+controlPv "$(DEVICE):$(C)00:CLKRATE"
+format "string"
+font "helvetica-medium-r-12.0"
+fgColor index 14
+fgAlarm
+bgColor index 4
+nullColor index 4
+nullCondition "disabled"
+newPos
+objType "monitors"
+endObjectProperties
+
