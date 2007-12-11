@@ -7,8 +7,8 @@
              hytec_ipmAdd        - Add ip module to a linked list
 	   * hytec_ipmCreate     - Allocate memory and add IPAC module to the list. 
              hytec_ipmGetFirst   - Get ptr to the first card in the list
-	   * hytec_ipmGetByLoc   - Get ptr to card info by carrier and slot
-	   * hytec_ipmGetByName  - Get ptr to card info by name
+	     hytec_ipmGetByLoc   - Get ptr to card info by carrier and slot
+	     hytec_ipmGetByName  - Get ptr to card info by name
            * hytec_ipmInit       - Initialize card configuation structure
              hytec_ipmInitDev    - Initialize device structure 
 	   * hytec_analyzeINP    - Analyze input string.
@@ -30,8 +30,8 @@
  
 -------------------------------------------------------------
   Mod:
-        dd-mmm-yyyy, First Lastname (USERNAME):
-           Comments
+        05-Dec-2007, K. Luchini        (LUCHINI):
+           added TYPE_MBBO to hytec_ipmInitDev
  
 =============================================================
 */ 
@@ -93,9 +93,6 @@ static long hytec_ipmCreate( char const * const name_c,
                              unsigned short     model,
                              unsigned long      mask,
                              unsigned char      vector );
-static void * hytec_ipmGetByName( char const * const  name_c );
-static void * hytec_ipmGetByLoc( unsigned short  carrier,  
-                                 unsigned short  slot );
 static long hytec_analyzeINP( char const      * const name_c,
                               char const      * const string_c,
                               IPADC_ID        * const card_pps,
@@ -540,7 +537,7 @@ void * hytec_ipmGetFirst( void )
             Otherwise, pointer of card information
 
 =======================================================*/
-static void * hytec_ipmGetByName(char const   * const  name_c)
+void * hytec_ipmGetByName(char const   * const  name_c)
 {
     IPADC_ID card_ps  = NULL;
     IPADC_ID found_ps = NULL;
@@ -583,8 +580,8 @@ static void * hytec_ipmGetByName(char const   * const  name_c)
             Otherwise, pointer of card information
  
 =======================================================*/
-static void * hytec_ipmGetByLoc(unsigned short   carrier, 
-                                unsigned short   slot )
+void * hytec_ipmGetByLoc(unsigned short   carrier,
+                         unsigned short   slot )
 {
    IPADC_ID  card_ps = NULL;
    int       found   = 0;
@@ -671,6 +668,7 @@ void * hytec_ipmInitDev( char const *  const          rec_name_c,
 	   } 
            break;
 
+         case TYPE_MBBO:
          case TYPE_MBBI:
            offset = chan;
            if ((reg_type==ReadCAL) && (offset>=IPAC_ID_SPACE_WCNT))
