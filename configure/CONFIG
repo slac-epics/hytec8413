@@ -6,7 +6,7 @@ include $(TOP)/configure/CONFIG_APP
 # Let's build for the MVM2101 "target" by default.
 # The Tornado 2.0.2 (i.e. vxWorks 5.4.2 target) is vxWorks-ppc603
 # The Tornado 2.2.1 (i.e. vxWorks 5.5.1 target) is vxWorks-ppc603_T2-2
-#CROSS_COMPILER_TARGET_ARCHS = vxWorks-ppc603 vxWorks-ppc603_T2-2 vxWorks-ppc603_long vxWorks-ppc604_T2-2
+CROSS_COMPILER_TARGET_ARCHS = RTEMS-beatnik linux-x86
 
 
 
