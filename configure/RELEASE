@@ -9,7 +9,6 @@
 # ==============================================================
 EPICS_SITE_TOP=/nfs/slac/g/lcls/build/epics
 
-
 # ==================================================================================
 #If using macro substitutions, point MSI at the binary:
 EXTENSIONS_MODULE_VERSION=extensions-R3-14-9
@@ -22,25 +21,24 @@ MSI=$(EPICS_SITE_TOP)/extensions/$(EXTENSIONS_MODULE_VERSION)/bin/$(EPICS_HOST_A
 # =============================================================
 EPICS_MODULES=$(EPICS_SITE_TOP)/modules
 
-
 # ==============================================================
 # Define the version of EPICS BASE that you will use
 # =============================================================
-BASE_MODULE_VERSION=base-R3-14-9-lcls1
+BASE_MODULE_VERSION=base-R3-14-8-2-lcls2
 
 # =============================================================
 # Define the version of modules needed by
 # IOC apps or other Support apps
 # =============================================================
-IPAC_MODULE_VERSION=ipac-R2-8-lcls2
-
+IPAC_MODULE_VERSION=ipac-R2-8-lcls3
+#IP231_MODULE_VERSION=ip231-R1-0-4
 
 # ============================================================
 #  IPAC release V2-7 or later is required.
 # Carrier card support for acromag and xycom
 # ============================================================
 IPAC=$(EPICS_MODULES)/ipac/$(IPAC_MODULE_VERSION)
-
+#IP231=$(EPICS_MODULES)/ip231/$(IP231_MODULE_VERSION)
 
 # =================================================================
 # Define EPICS_BASE
