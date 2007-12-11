@@ -12,8 +12,9 @@
 
 -------------------------------------------------------------
   Mod:
-        dd-mmm-yyyy, First Lastname (USERNAME):
-           comments
+        06-Dec-2007, K. Luchini       (LUCHINI):
+          add prototype for hytec_ipmGetByLoc()
+          add prototype for hytec_ipmGetByName()
 
 =============================================================
 */
@@ -52,6 +53,18 @@ void * hytec_ipmInitDev(
  */
 void * hytec_ipmGetFirst(void);
 
+/*
+ * The purpose of this function is to get the 
+ * ptr to the card info by card name.
+ */
+void * hytec_ipmGetByName( char const * const  name_c );
+
+/*
+ * The purpose of this function is to get the 
+ * ptr to the card info by carrier and slot
+ */
+void * hytec_ipmGetByLoc( unsigned short  carrier,  
+                          unsigned short  slot );
 /*
  * The purpose of this function is to display
  * information regarding the card list list. The
