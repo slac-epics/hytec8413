@@ -10,6 +10,8 @@
 #  Rev:  dd-mmm-yyyy, Reviewer's Name    (USERNAME)
 #--------------------------------------------------------------
 #  Mod:
+#        10-Dec-2007, K. Luchini         (LUCHINI):
+#          add release hytec8413-R1-1-5
 #        Oct-08-2007, K. Luchini         (LUCHINI):
 #          add release hytec8413-R1-1-4
 #          add release hytec8413-R1-1-3
@@ -22,6 +24,11 @@
 #
 #==============================================================
 #
+hytec8413-R1-1-5:Backout epics  base-R3-14-8-lcls2 (RTEMS 4.7.1)
+                 Build with ipac-R2-8-lcls3
+                 Add sam mode setup, new firmware bits in acr.
+                 Add more layers of directories.
+
 hytec8413-R1-1-4:Build with base-R3-14-9-lcls1 (RTEMS 4.7.1)
                  Build with extensions-R3-14-9
                  Build with ipac-R2-8-lcls2
