@@ -14,6 +14,8 @@
 
 -------------------------------------------------------------
   Mod:
+        05-Dec-2007, K. Luchini       (LUCHINI):
+          add SetIO to write_mbbo()
         08-Nov-2006, K. Luchini       (LUCHINI):
           cast arg 1 in hy8413_rd() to void ptr
 
@@ -95,7 +97,7 @@ static long init_mbbo(void *rec_p)
     unsigned short                nelm       = 1;
     unsigned short                type       = TYPE_MBBO;
     struct instio                *instio_ps  = NULL;
-    struct mbboRecord            *rec_ps    = NULL;
+    struct mbboRecord            *rec_ps     = NULL;
 
    /*
     * Is this bus type supported for this module?
@@ -156,7 +158,11 @@ static long write_mbbo(void *rec_p)
    long                status=OK;       /* status return            */
    unsigned short      cur_stat   = WRITE_ALARM;  /* alarm status   */
    unsigned short      cur_sevr   = INVALID_ALARM;/* alarm severity */
+   unsigned short      val        = 0;            /* output data    */
+   volatile unsigned short *io_a  = NULL;         /* ptr to io base */
+   unsigned short      mask       = 1;            /* bitmask        */
    DPVT_ID             devPvt_ps  = NULL;
+   IPADC_ID            card_ps    = NULL;
    struct mbboRecord  *rec_ps      = (struct mbboRecord *)rec_p;
    char               *taskName_c = "devMbboHy8413( write )";
 
@@ -177,15 +183,27 @@ static long write_mbbo(void *rec_p)
    }
 
    devPvt_ps = (DPVT_ID)rec_ps->dpvt;
+   card_ps   = devPvt_ps->card_ps;
+   io_a      = card_ps->io_p;
    switch( devPvt_ps->func ) 
    {
        case SetACR:
-          if ( debugDevHy8413==0x10)
+          if (debugDevHy8413==0x10)
 	    printf("%s: devSup has not been implimented to support ACR\n",taskName_c);
           break;
 
+       case SetIO:
+          mask <<= rec_ps->nobt;
+          mask  -= 1;
+          val  = (unsigned short)rec_ps->val;
+          io_a[devPvt_ps->i] =  val & mask;
+          if (debugDevHy8413==0x10)
+	    printf("%s: devSup has not been implimented to support ACR\n",taskName_c);
+          
+          break;
+
        default:
-          if ( debugDevHy8413==0x10)
+          if (debugDevHy8413==0x10)
             printf("%s:  devSup has not been implimented for %s\n",taskName_c,rec_ps->name);
           status = ERROR;
           break;
