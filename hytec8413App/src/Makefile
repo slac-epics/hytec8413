@@ -5,10 +5,6 @@
 #
 #  Name: Makefile
 #
-#  Side: None
-#
-#  Facility: SLAC/LCLS
-#
 #  Auth: 21-Aug-2006, K. Luchini     (LUCHINI)
 #  Rev:  dd-mmm-yyyy, First Lastname (USERNAME)
 #
@@ -19,7 +15,7 @@
 #
 #=============================================================
 #
-TOP=..
+TOP=../..
 include $(TOP)/configure/CONFIG
 #----------------------------------------
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
