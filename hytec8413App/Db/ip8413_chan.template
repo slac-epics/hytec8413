@@ -1,0 +1,41 @@
+record(ai, "$(DEVICE):VACT") {
+  field(DESC, "$(DESC)")
+  field(DTYP, "Hytec IP-ADC-8413")
+  field(INP,  "@$(CARD):$(CH):DATA")
+  field(SCAN,"$(SCAN)")
+  field(PREC, "6")
+  field(EGUF, "$(EGUF)")
+  field(EGUL, "$(EGUL)")
+  field(HOPR, "$(EGUF)")
+  field(LOPR, "$(EGUL)")
+  field(ADEL, "$(ADEL)")
+  field(MDEL, "$(MDEL)")
+  field(HIHI, "$(HIHI)")
+  field(HIGH, "$(HIGH)")
+  field(LOW,  "$(LOW)")
+  field(LOLO, "$(LOLO)")
+  field(EGU,  "Volts")
+  field(LINR, "LINEAR")
+  field(HHSV, "MAJOR")
+  field(HSV,  "MINOR")
+  field(LSV,  "MINOR")
+  field(LLSV, "MAJOR")
+}
+
+record(bo,"$(DEVICE):CALBSETPT") {
+  field(DESC, "Use Calibration")
+  field(DTYP, "Hytec IP-ADC-8413")
+  field(OUT, "@$(CARD):$(CH):CAL")
+  field(ZNAM, "Not-In-Use")
+  field(ONAM, "In-Use")
+}
+
+record(bi, "$(DEVICE):CALBSTATUS") {
+  field(DESC, "Calibration Status")
+  field(DTYP, "Hytec IP-ADC-8413")
+  field(SCAN, "10 second")
+  field(INP, "@$(CARD):$(CH):CAL")
+  field(ZNAM, "No-In-Use")
+  field(ONAM, "In-Use")
+}
+

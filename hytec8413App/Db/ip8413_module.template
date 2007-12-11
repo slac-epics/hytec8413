@@ -1,0 +1,169 @@
+
+record(bi, "$(DEVICE):VRANGE") {
+  field(DESC, "Module Voltage Range")
+  field(DTYP, "Hytec IP-ADC-8413")
+  field(INP, "@$(CARD):1:ACR")
+  field(ZNAM, "+/-10V")
+  field(ONAM, "+/-5V")
+  field(PINI, "YES")
+}
+
+record(bi, "$(DEVICE):MODE") {
+  field(DESC, "Module Operating Mode")
+  field(DTYP, "Hytec IP-ADC-8413")
+  field(INP, "@$(CARD):3:ACR")
+  field(ZNAM, "Standby")
+  field(ONAM, "Normal")
+  field(PINI, "YES")
+}
+
+record(bi, "$(DEVICE):FORMAT") {
+  field(DESC, "ADC Data Format")
+  field(DTYP, "Hytec IP-ADC-8413")
+  field(INP, "@$(CARD):4:ACR")
+  field(ZNAM, "Two's Compliment")
+  field(ONAM, "Offset Binary")
+  field(PINI, "YES")
+}
+
+record(longin, "$(DEVICE):VECTOR") {
+  field(DESC, "Interrupt Vector")
+  field(DTYP, "Hytec IP-ADC-8413")
+  field(INP, "@$(CARD):4:IO")
+  field(PINI, "YES")
+}
+
+record(mbbi, "$(DEVICE):CLKRATE") {
+  field(DESC, "Internal Clock Rate")
+  field(DTYP, "Hytec IP-ADC-8413")
+  field(INP, "@$(CARD):3:IO")
+  field(NOBT, "4")
+  field(ZRST, "1Hz")
+  field(ONST, "2Hz")
+  field(TWST, "5Hz")
+  field(THST,"10Hz")
+  field(FRST,"20Hz")
+  field(FVST,"50Hz")
+  field(SXST,"100Hz")
+  field(SVST,"200Hz")
+  field(EIST,"500Hz")
+  field(ZRVL,"0")
+  field(ONVL,"1")
+  field(TWVL,"2")
+  field(THVL,"3")
+  field(FRVL,"4")
+  field(FVVL,"5")
+  field(SXVL,"6")
+  field(SVVL,"7")
+  field(EIVL,"8")
+  field(ZRSV,"NO_ALARM")
+  field(ONSV,"NO_ALARM")
+  field(TWSV,"NO_ALARM")
+  field(THSV,"NO_ALARM")
+  field(FRSV,"NO_ALARM")
+  field(FVSV,"NO_ALARM")
+  field(SXSV,"NO_ALARM")
+  field(SVSV,"NO_ALARM")
+  field(EISV,"NO_ALARM")
+  field(PINI, "YES")
+}
+
+record(longin, "$(DEVICE):MODEL") {
+  field(DESC, "Module Model No.")
+  field(DTYP, "Hytec IP-ADC-8413")
+  field(INP, "@$(CARD):5:ID")
+  field(PINI, "YES")
+}
+
+record(longin, "$(DEVICE):REV") {
+  field(DESC, "Module Revision No.")
+  field(DTYP, "Hytec IP-ADC-8413")
+  field(INP, "@$(CARD):6:ID")
+  field(PINI, "YES")
+}
+
+record(longin, "$(DEVICE):SERNO") {
+  field(DESC, "Module Serial No.")
+  field(DTYP, "Hytec IP-ADC-8413")
+  field(INP, "@$(CARD):13:ID")
+  field(PINI, "YES")
+}
+
+record(mbbi, "$(DEVICE):CALBTYPE") {
+  field(DESC, "Module Calibrate Type")
+  field(DTYP, "Hytec IP-ADC-8413")
+  field(INP, "@$(CARD):12:ID")
+  field(NOBT, "2")
+  field(ZRST, "No Calibration")
+  field(ONST, "3-Point")
+  field(TWST, "5-Point")
+  field(ZRVL,"0")
+  field(ONVL,"1")
+  field(TWVL,"2")
+  field(ZRSV, "MAJOR")
+  field(ONSV, "NO_ALARM")
+  field(TWSV, "NO_ALARM")
+  field(FLNK, "$(DEVICE):CALBOK")
+  field(PINI, "YES")
+}
+
+record(calc, "$(DEVICE):CALBOK") {
+  field(DESC, "Module Calb Ok")
+  field(CALC, "A?1:0")
+  field(INPA, "$(DEVICE):CALBTYPE.RVAL")
+  field(FLNK, "$(DEVICE):CALBOKGO")
+}
+
+record(seq, "$(DEVICE):CALBOKGO") {
+  field(DESC, "MCOR Calb Type Fanout")
+  field(SCAN, "Passive")
+  field(SELM, "All")
+  field(LNK1, "$(TYP)01:CALBOK PP NMS")
+  field(DOL1, "$(DEVICE):CALBTYPE.RVAL")
+  field(LNK2, "$(TYP)02:CALBOK PP NMS")
+  field(DOL2, "$(DEVICE):CALBTYPE.RVAL")
+  field(LNK3, "$(TYP)03:CALBOK PP NMS")
+  field(DOL3, "$(DEVICE):CALBTYPE.RVAL")
+  field(LNK4, "$(TYP)04:CALBOK PP NMS")
+  field(DOL4, "$(DEVICE):CALBTYPE.RVAL")
+  field(LNK5, "$(TYP)05:CALBOK PP NMS")
+  field(DOL5, "$(DEVICE):CALBTYPE.RVAL")
+  field(FLNK, "$(DEVICE):CALBOKFO1")
+}
+
+record(seq, "$(DEVICE):CALBOKFO1") {
+  field(DESC, "MCOR Calb Type Fanout")
+  field(SCAN, "Passive")
+  field(SELM, "All")
+  field(LNK1, "$(TYP)06:CALBOK PP NMS")
+  field(DOL1, "$(DEVICE):CALBTYPE.RVAL")
+  field(LNK2, "$(TYP)07:CALBOK PP NMS")
+  field(DOL2, "$(DEVICE):CALBTYPE.RVAL")
+  field(LNK3, "$(TYP)08:CALBOK PP NMS")
+  field(DOL3, "$(DEVICE):CALBTYPE.RVAL")
+  field(LNK4, "$(TYP)09:CALBOK PP NMS")
+  field(DOL4, "$(DEVICE):CALBTYPE.RVAL")
+  field(LNK5, "$(TYP)10:CALBOK PP NMS")
+  field(DOL5, "$(DEVICE):CALBTYPE.RVAL")
+  field(FLNK, "$(DEVICE):CALBOKFO2")
+}
+
+record(seq, "$(DEVICE):CALBOKFO2") {
+  field(DESC, "MCOR Calb Type Fanout")
+  field(SCAN, "Passive")
+  field(SELM, "All")
+  field(LNK1, "$(TYP)11:CALBOK PP NMS")
+  field(DOL1, "$(DEVICE):CALBTYPE.RVAL")
+  field(LNK2, "$(TYP)12:CALBOK PP NMS")
+  field(DOL2, "$(DEVICE):CALBTYPE.RVAL")
+  field(LNK3, "$(TYP)13:CALBOK PP NMS")
+  field(DOL3, "$(DEVICE):CALBTYPE.RVAL")
+  field(LNK4, "$(TYP)14:CALBOK PP NMS")
+  field(DOL4, "$(DEVICE):CALBTYPE.RVAL")
+  field(LNK5, "$(TYP)15:CALBOK PP NMS")
+  field(DOL5, "$(DEVICE):CALBTYPE.RVAL")
+  field(LNK6, "$(TYP)16:CALBOK PP NMS")
+  field(DOL6, "$(DEVICE):CALBTYPE.RVAL")
+}
+
+
