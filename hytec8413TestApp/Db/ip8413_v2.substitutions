@@ -1,0 +1,62 @@
+#==============================================================================
+#
+# Abs:  Hytec ip-adc-8413 substitutions file
+#
+# Name: ip8413_v2.substitutions 
+#
+# Rem:  This is the SLAC version (v2) of the ip-adc-8413 module
+#       from Hytec. The SLAC version has a firmware modification,
+#       the oscillating crystal and capacitors.
+#
+#       The firmware changes provides averaging in an attempt
+#       to eliminate 60Hz noise. This modification modified 
+#       the ACR registers, defining bits D07-D11, which 
+#       were unused in the version (v1) of this module.
+#
+#       The standard version (v1) has an on-board 16MHz
+#       crystal oscillatorm which in the SLAC version (v2) 
+#       has been changed to a crystal with a 15.36MHz clocl rate.
+#
+# Auth: 05-Dec-2007, K. Luchini      (LUCHINI)
+# Rev:  dd-mmm-yyyy, Reviewer's Name (USERNAME)
+#-----------------------------------------------------------------------------
+# Mod:
+#       dd-mmm-yyyy, First lastname (USERNAME):
+#         comment
+#
+#==============================================================================
+#
+#
+# Analog-to-Digital (ADC) -  Module Specific
+#
+file ip8413_module_v2.template
+{ 
+  pattern { DEVICE       , TYPE       , CARD  }
+          { ADC:IN20:100 , ADC:IN20:1 , "ai0" }
+}
+ 
+#
+# Analog-to-Digital (ADC) - Channels Specific
+#
+file ip8413_chan.template
+{
+  pattern { DESC       , DEVICE         , CARD  ,  CH, EFUG,  EGUL , ADEL,  MDEL, HIHI,  HIGH, LOW, LOLO, SCAN       }
+          { "ADC Data" , "ADC:IN20:101" , "ai0" ,   0, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+          { "ADC Data" , "ADC:IN20:102" , "ai0" ,   1, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+          { "ADC Data" , "ADC:IN20:103" , "ai0" ,   2, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+          { "ADC Data" , "ADC:IN20:104" , "ai0" ,   3, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+          { "ADC Data" , "ADC:IN20:105" , "ai0" ,   4, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+          { "ADC Data" , "ADC:IN20:106" , "ai0" ,   5, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+          { "ADC Data" , "ADC:IN20:107" , "ai0" ,   6, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+          { "ADC Data" , "ADC:IN20:108" , "ai0" ,   7, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+          { "ADC Data" , "ADC:IN20:109" , "ai0" ,   8, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+          { "ADC Data" , "ADC:IN20:110" , "ai0" ,   9, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+          { "ADC Data" , "ADC:IN20:111" , "ai0" ,  10, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+          { "ADC Data" , "ADC:IN20:112" , "ai0" ,  11, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+          { "ADC Data" , "ADC:IN20:113" , "ai0" ,  12, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+          { "ADC Data" , "ADC:IN20:114" , "ai0" ,  13, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+          { "ADC Data" , "ADC:IN20:115" , "ai0" ,  14, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+          { "ADC Data" , "ADC:IN20:116" , "ai0" ,  15, 10.0,  -10.0, 0.0 ,  0.0 , 4.5 ,  4.0 , 1.0, 0.5 , "1 second" }
+}
+
+# End of file
