@@ -2,16 +2,19 @@
 # Run "gnumake clean uninstall install" in the application
 # top directory each time this file is changed.
 
+include $(TOP)/RELEASE_SITE
+
 # =============================================================
 # Define the top of the EPICS tree for your site.
 # We will build some tools/scripts that allow us to
 # change this easily when relocating software.
 # ==============================================================
-EPICS_SITE_TOP=/nfs/slac/g/lcls/build/epics
+#EPICS_SITE_TOP=/nfs/slac/g/lcls/build/epics
+TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
 
 # ==================================================================================
 #If using macro substitutions, point MSI at the binary:
-EXTENSIONS_MODULE_VERSION=extensions-R3-14-8-2
+EXTENSIONS_MODULE_VERSION=extensions-R3-14-9
 MSI=$(EPICS_SITE_TOP)/extensions/$(EXTENSIONS_MODULE_VERSION)/bin/$(EPICS_HOST_ARCH)/msi
 # ==================================================================================
 
@@ -24,14 +27,14 @@ EPICS_MODULES=$(EPICS_SITE_TOP)/modules
 # ==============================================================
 # Define the version of EPICS BASE that you will use
 # =============================================================
-BASE_MODULE_VERSION=base-R3-14-8-2-lcls2
+BASE_MODULE_VERSION=base-R3-14-9-lcls1
 
 # =============================================================
 # Define the version of modules needed by
 # IOC apps or other Support apps
 # =============================================================
-IPAC_MODULE_VERSION=ipac-R2-8-lcls3
-#IP231_MODULE_VERSION=ip231-R1-0-4
+IPAC_MODULE_VERSION=ipac-R2-8-lcls4
+#IP231_MODULE_VERSION=ip231-R1-0-5
 
 # ============================================================
 #  IPAC release V2-7 or later is required.
