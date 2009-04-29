@@ -10,8 +10,10 @@
 #  Rev:  dd-mmm-yyyy, Reviewer's Name    (USERNAME)
 #--------------------------------------------------------------
 #  Mod:
+#        29-Apr-2009, K. Luchini         (LUCHINI):
+#          add release hytec8413-R2-0-0
 #        21-Feb-2008, K. Luchini         (LUCHINI):
-#          add release hytec8414-R1-1-5-1
+#          add release hytec8413-R1-1-5-1
 #        10-Dec-2007, K. Luchini         (LUCHINI):
 #          add release hytec8413-R1-1-5
 #        Oct-08-2007, K. Luchini         (LUCHINI):
@@ -26,6 +28,8 @@
 #
 #==============================================================
 #
+hytec8413-R2-0-0: Build with base-R3-14-9-lcls3 (RTEMS 4.9.1)
+
 hytec8413-R1-1-5-1: Build with base-R3-14-9-lcls1 (RTEMS 4.7.1)
                     Replace CONFIG_APP with CONFIG_SITE
                     Add RELEASE_SITE
