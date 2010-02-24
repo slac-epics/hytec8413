@@ -33,8 +33,8 @@ BASE_MODULE_VERSION=base-R3-14-8-2-lcls3
 # IOC apps or other Support apps
 # Note: the ip231 driver is only neede for hytec8413TestApp 
 # =============================================================
-IPAC_MODULE_VERSION=ipac-R2-8-lcls5
-IP231_MODULE_VERSION=ip231-R2-0-0
+IPAC_MODULE_VERSION=ipac-R2-8-lcls6
+IP231_MODULE_VERSION=ip231-R2-1-0
 
 # ============================================================
 #  IPAC release V2-7 or later is required.
