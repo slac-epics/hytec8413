@@ -10,6 +10,8 @@
 #  Rev:  dd-mmm-yyyy, Reviewer's Name    (USERNAME)
 #--------------------------------------------------------------
 #  Mod:
+#        20-Mar-2010, S. Hoobler         (SONYA):
+#          add release hytec8413-R2-2-0
 #        23-Feb-2010, K. Luchini         (LUCHINI):
 #          add release hytec8413-R2-1-0
 #        29-Apr-2009, K. Luchini         (LUCHINI):
@@ -30,6 +32,8 @@
 #
 #==============================================================
 #
+hytec8413-R2-2-0: Build with base-R3-14-9-lcls6 (RTEMS 4.9.4)
+
 hytec8413-R2-1-0: Build with base-R3-14-9-lcls5 (RTEMS 4.9.3)
 
 hytec8413-R2-0-0: Build with base-R3-14-9-lcls3 (RTEMS 4.9.1)
