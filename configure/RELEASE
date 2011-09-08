@@ -2,39 +2,26 @@
 # Run "gnumake clean uninstall install" in the application
 # top directory each time this file is changed.
 include $(TOP)/RELEASE_SITE
-TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
-
-# =============================================================
-# Define the top of the EPICS tree for your site.
-# We will build some tools/scripts that allow us to
-# change this easily when relocating software.
-# ==============================================================
-#EPICS_SITE_TOP=/nfs/slac/g/lcls/build/epics
+TEMPLATE_TOP=$(BASE_SITE_TOP)/$(EPICS_BASE_VER)/templates/makeBaseApp/top
 
 # ==================================================================================
 # If using macro substitutions, point MSI at the binary:
-EXTENSIONS_MODULE_VERSION=extensions-R3-14-8-2
-MSI=$(EPICS_SITE_TOP)/extensions/$(EXTENSIONS_MODULE_VERSION)/bin/$(EPICS_HOST_ARCH)/msi
+MSI=$(EXTENSIONS_SITE_TOP)/$(EPICS_EXTENSIONS_VER)/bin/$(EPICS_HOST_ARCH)/msi
 # ==================================================================================
 
 # =============================================================
 # Define location of module tree with respect to
 # EPICS_SITE_TOP
 # =============================================================
-EPICS_MODULES=$(EPICS_SITE_TOP)/modules
-
-# ==============================================================
-# Define the version of EPICS BASE that you will use
-# =============================================================
-BASE_MODULE_VERSION=base-R3-14-8-2-lcls6
+EPICS_MODULES=$(MODULES_SITE_TOP)
 
 # =============================================================
 # Define the version of modules needed by
 # IOC apps or other Support apps
 # Note: the ip231 driver is only neede for hytec8413TestApp 
 # =============================================================
-IPAC_MODULE_VERSION=ipac-R2-8-lcls7
-IP231_MODULE_VERSION=ip231-R2-2-0
+IPAC_MODULE_VERSION=ipac-R2-11-lcls1
+IP231_MODULE_VERSION=ip231-R2-2-1
 
 # ============================================================
 #  IPAC release V2-7 or later is required.
@@ -47,6 +34,6 @@ IP231=$(EPICS_MODULES)/ip231/$(IP231_MODULE_VERSION)
 # Define EPICS_BASE
 # EPICS_BASE usually appears last so other apps can override stuff:
 # =================================================================
-EPICS_BASE=$(EPICS_SITE_TOP)/base/$(BASE_MODULE_VERSION)
+EPICS_BASE=$(BASE_SITE_TOP)/$(EPICS_BASE_VER)
 
 # End of file
