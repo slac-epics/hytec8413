@@ -32,6 +32,10 @@
 #
 #==============================================================
 #
+hytec8413-R2-2-1: 07-Sep-2011, K. Luchini (LUCHINI):
+                  Upgrade ipac  from ipac-R2-8-lcls7 to ipac-R2-11-lcls1
+                  Upgrade ip231 from ip231-R2-2-0    to ip231-R2-2-1
+
 hytec8413-R2-2-0: Build with base-R3-14-9-lcls6 (RTEMS 4.9.4)
 
 hytec8413-R2-1-0: Build with base-R3-14-9-lcls5 (RTEMS 4.9.3)
