@@ -30,6 +30,9 @@
 #include "epicsVersion.h"
 #include "epicsMutex.h"
 #include "epicsString.h"
+#if (EPICS_REVISION == 14 && EPICS_MODIFICATION >= 11)
+#include  "errlog.h"
+#endif
 #include "cantProceed.h"
 #include "biRecord.h"         /* struct biRecord           */
 #include "alarm.h"            /* READ_ALARM,INVALID_ALARM  */    

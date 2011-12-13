@@ -24,6 +24,10 @@
 #ifndef HYTECIPM_H
 #define HYTECIPM_H
 
+#if (EPICS_REVISION == 14 && EPICS_MODIFICATION >= 11)
+#include "ellLib.h"
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif  /* __cplusplus */
@@ -233,8 +237,8 @@ typedef struct  hytec_ipmCal_s
 
 typedef void (*VOIDFUNPTR)(void);
 
-typedef struct hytec_ipmConfig_s
-{
+typedef struct hytec_ipmConfig_s {
+
   ELLNODE                 node;          /* Link List Node                  */
   unsigned short          carrier;       /* Industry Pack Carrier Index     */
   unsigned short          slot;          /* Slot number on carrier          */

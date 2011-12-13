@@ -32,6 +32,9 @@
 #include "epicsMutex.h"
 #include "epicsString.h"
 #include "cantProceed.h"
+#if (EPICS_REVISION == 14 && EPICS_MODIFICATION >= 11)
+#include  "errlog.h"
+#endif
 #include "mbbiDirectRecord.h" /* struct mbbiDirectRecord   */
 #include "alarm.h"            /* READ_ALARM,INVALID_ALARM  */    
 #include "recGbl.h"           /* recGblRecordError proto   */
