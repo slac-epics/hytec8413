@@ -32,6 +32,9 @@
 #
 #==============================================================
 #
+hytec8413-R2-2-3: 23-Jan-2012, Ernesto
+                  Add ip231 for hytec8413TestApp
+
 hytec8413-R2-2-2: 12-Dec-2011, Ernesto         
                   Changes to source to include errlog.h
                   for EPICS R3-14-12; also include ellLib.h for EPICS R3-14-12
