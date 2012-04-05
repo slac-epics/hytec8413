@@ -273,7 +273,7 @@ static long read_mbbi(void *rec_p)
 		  val,
 		  devPvt_ps->i,
 		  mask,
-                  rec_ps->rval,
+                  (long unsigned int)rec_ps->rval,
                   rec_ps->name );
  	 break;
 
@@ -284,7 +284,7 @@ static long read_mbbi(void *rec_p)
          if ( debugDevHy8413==2)
            printf("%s: IO value=0x%lx for %s\n",
                   taskName_c,
-                  rec_ps->rval,
+                  (long unsigned int)rec_ps->rval,
                   rec_ps->name );
 	 break;
 
@@ -294,7 +294,7 @@ static long read_mbbi(void *rec_p)
           if ( debugDevHy8413==2)
             printf("%s: ID prom value=0x%lx for %s\n",
                   taskName_c,
-                  rec_ps->rval,
+		   (long unsigned int)rec_ps->rval,
                   rec_ps->name );
           break;
 
