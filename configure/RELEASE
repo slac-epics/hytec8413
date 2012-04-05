@@ -16,14 +16,14 @@ EPICS_MODULES=$(MODULES_SITE_TOP)
 # Note: the ip231 driver is only neede for hytec8413TestApp 
 # =============================================================
 IPAC_MODULE_VERSION=ipac-R2-11-lcls1
-IP231_MODULE_VERSION=ip231-R2-2-3
+#IP231_MODULE_VERSION=ip231-R2-2-3
 
 # ============================================================
 #  IPAC release V2-7 or later is required.
 # Carrier card support for acromag and xycom
 # ============================================================
 IPAC=$(EPICS_MODULES)/ipac/$(IPAC_MODULE_VERSION)
-IP231=$(EPICS_MODULES)/ip231/$(IP231_MODULE_VERSION)
+#IP231=$(EPICS_MODULES)/ip231/$(IP231_MODULE_VERSION)
 
 # =================================================================
 # Define EPICS_BASE
