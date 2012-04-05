@@ -23,9 +23,17 @@ data fitlering, can be found in the document listed below.
 To build the hytec8413Lib you will need the ipac package. 
 The ip231 package is listed in the configure/RELEASE file, but it is only
 used (or another dac) for the hytec8413TestApp. To build the this test
-application uncomment the line
+application uncomment the line in the following files:
+
+$TOP/Makefile
  DIRS += hytec8413TestApp 
-This test application must be buit after the hytec8413App.
+
+$TOP/configure/RELEASE
+ IP231_MODULE_VERSION=ip231-R2-2-3
+ IP231=$(EPICS_MODULES)/ip231/$(IP231_MODULE_VERSION)
+
+This test application must be built after the hytec8413App.
+
 
 
 DOCUMENTATION:
