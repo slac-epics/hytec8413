@@ -32,6 +32,8 @@
 #
 #==============================================================
 #
+hytec8413-R2-2-4:  Build against ipac-R2-11_1-0; which buils all target archs
+
 hytec8413-R2-2-3: 23-Jan-2012, Ernesto
                   Add ip231 for hytec8413TestApp
 
