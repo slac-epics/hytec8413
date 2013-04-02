@@ -32,6 +32,9 @@
 #
 #==============================================================
 #
+hytec8413-R2-2-5:  Ernest Williams
+26-Mar-2013        Build against ipac-R2-11_1-0; which buils all target archs
+
 hytec8413-R2-2-4:  K. Luchini
 05-Apr-2012        Fix warning in devMbbiHy8413.c by using casting
                    comment out ip231 for hytec8413TestApp and
