@@ -15,7 +15,7 @@ EPICS_MODULES=$(MODULES_SITE_TOP)
 # IOC apps or other Support apps
 # Note: the ip231 driver is only neede for hytec8413TestApp 
 # =============================================================
-IPAC_MODULE_VERSION=ipac-R2-11-lcls1
+IPAC_MODULE_VERSION=ipac-R2-11_1-0
 #IP231_MODULE_VERSION=ip231-R2-2-3
 
 # ============================================================
