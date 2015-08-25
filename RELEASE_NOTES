@@ -34,6 +34,10 @@
 #
 hytec8413-R2-2-6:  Ernest Williams
 18-Apr-2015        Build against ipac-R2-11_1-2; which buils all target archs
+25-Aug-2015        Force tag to put this change on the HEAD (luchini)
+
+hytec8413-R2-2-5_1-0:  Kristi Luchini
+25-Aug-2015        Build against ipac-R2-11_1-1; which buils all target archs
 
 hytec8413-R2-2-5:  Ernest Williams
 26-Mar-2013        Build against ipac-R2-11_1-0; which buils all target archs
