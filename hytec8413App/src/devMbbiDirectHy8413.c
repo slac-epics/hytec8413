@@ -32,7 +32,7 @@
 #include "epicsMutex.h"
 #include "epicsString.h"
 #include "cantProceed.h"
-#if (EPICS_REVISION == 14 && EPICS_MODIFICATION >= 11)
+#if (EPICS_REVISION == 14 && EPICS_MODIFICATION >= 11) || (EPICS_REVISION == 15)
 #include  "errlog.h"
 #endif
 #include "mbbiDirectRecord.h" /* struct mbbiDirectRecord   */
