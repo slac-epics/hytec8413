@@ -31,7 +31,11 @@
 #          add release hytec8413-R1-1-0
 #
 #==============================================================
-#
+
+R2.3.0:            Marcio Donadio
+04-Apr-2017        ellLib.h and errlog.h must be added to EPICS 3.15, too
+04-Apr-2017        Module migrated to EPICS 3.15 and git workflow
+
 hytec8413-R2-2-6:  Ernest Williams
 18-Apr-2015        Build against ipac-R2-11_1-2; which buils all target archs
 25-Aug-2015        Force tag to put this change on the HEAD (luchini)
