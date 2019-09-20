@@ -31,7 +31,7 @@
 #include "epicsVersion.h"
 #include "epicsMutex.h"
 #include "epicsString.h"
-#if (EPICS_REVISION == 14 && EPICS_MODIFICATION >= 11) || (EPICS_REVISION == 15)
+#if (EPICS_REVISION == 14 && EPICS_MODIFICATION >= 11) || (EPICS_REVISION == 15) || (EPICS_VERSION == 7)
 #include  "errlog.h"
 #endif
 #include "cantProceed.h"

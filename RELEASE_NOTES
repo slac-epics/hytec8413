@@ -31,6 +31,8 @@
 #          add release hytec8413-R1-1-0
 #
 #==============================================================
+R2.3.1:            Ernesto: Add EPICS version check to support EPICS 7 as well.
+                   ellLib.h and errlog.h is needed for EPICS 7, too
 
 R2.3.0:            Marcio Donadio
 04-Apr-2017        ellLib.h and errlog.h must be added to EPICS 3.15, too

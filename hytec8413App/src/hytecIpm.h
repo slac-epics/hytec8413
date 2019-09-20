@@ -24,7 +24,7 @@
 #ifndef HYTECIPM_H
 #define HYTECIPM_H
 
-#if (EPICS_REVISION == 14 && EPICS_MODIFICATION >= 11) || (EPICS_REVISION == 15)
+#if (EPICS_REVISION == 14 && EPICS_MODIFICATION >= 11) || (EPICS_REVISION == 15) || (EPICS_VERSION == 7)
 #include "ellLib.h"
 #endif
 
