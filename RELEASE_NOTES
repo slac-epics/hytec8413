@@ -31,6 +31,10 @@
 #          add release hytec8413-R1-1-0
 #
 #==============================================================
+
+R2.3.2:            K. Luchini: Using IPAC R2.14-0.2.0
+20-Oct-2019
+
 R2.3.1:            Ernesto: Add EPICS version check to support EPICS 7 as well.
                    ellLib.h and errlog.h is needed for EPICS 7, too
 
