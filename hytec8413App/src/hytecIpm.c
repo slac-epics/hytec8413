@@ -43,6 +43,7 @@
 #include "epicsVersion.h"
 #include "epicsMutex.h"
 #include "epicsString.h"
+#include "errlog.h"
 #include "cantProceed.h"
 #include "ellLib.h"
 #include "dbScan.h"

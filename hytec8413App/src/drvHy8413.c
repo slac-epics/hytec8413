@@ -47,6 +47,7 @@
 #include "epicsMutex.h"
 #include "epicsString.h"
 #include "epicsInterrupt.h"
+#include "errlog.h"
 #include "cantProceed.h"
 #include "drvSup.h"
 #include "dbScan.h"
